@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Whisper 🌿</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #1a1a1a;
+      color: #e0e0e0;
+      line-height: 1.6;
+    }
+    header {
+      background: linear-gradient(135deg, #1f4037, #212121);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      border-radius: 0 0 15px 15px;
+    }
+    nav {
+      padding: 10px 0;
+    }
+    nav a {
+      margin: 0 15px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #99f2c8;
+    }
+    .content-section {
+      display: none;
+    }
+    .active-section {
+      display: block;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    /* Home Section Styles */
+    .hero {
+      text-align: center;
+      padding: 4rem 1rem;
+      background: #2a2a2a;
+      border-radius: 15px;
+      margin-top: 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .hero h2 {
+      font-size: 2.5rem;
+      background: linear-gradient(45deg, #a8e063, #56ab2f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      max-width: 600px;
+      margin: 1.5rem auto;
+      font-size: 1.1rem;
+      color: #b0b0b0;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 12px 24px;
+      background: linear-gradient(45deg, #56ab2f, #a8e063);
+      color: white;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    }
+    /* Herbs Section Styles */
+    .search-bar {
+      text-align: center;
+      padding: 1rem;
+    }
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      border: 1px solid #444;
+      border-radius: 25px;
+      background: #333;
+      color: #e0e0e0;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+    }
+    .filters {
+      text-align: center;
+      margin: 1rem 0;
+    }
+    .filters button {
+      margin: 5px;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      background: #1f4037;
+      color: white;
+      transition: background 0.3s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .filters button:hover {
+      background: #99f2c8;
+      color: #1a1a1a;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 1rem;
+    }
+    .card {
+      background: #3a3a3a;
+      border-radius: 15px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+    .card h3 {
+      font-size: 1.25rem;
+      margin: 0;
+      color: #e0e0e0;
+    }
+    .card p {
+      color: #ccc;
+      margin-top: 0.5rem;
+    }
+    .tag-container {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .tag {
+      font-size: 0.8rem;
+      background: #1f4037;
+      color: #e0e0e0;
+      padding: 4px 8px;
+      border-radius: 10px;
+    }
+    /* Detail Section Styles */
+    .detail-content h2 {
+      font-size: 2rem;
+      background: linear-gradient(45deg, #a8e063, #56ab2f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+    .detail-content h3 {
+      font-size: 1.5rem;
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+      color: #99f2c8;
+    }
+    .detail-content ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+    .detail-content li {
+      margin-bottom: 0.5rem;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .detail-content li::before {
+      content: '🌱';
+      position: absolute;
+      left: 0;
+    }
+    /* Remedies Section Styles */
+    .remedy-card {
+      background: #333;
+      padding: 1.5rem;
+      border-radius: 15px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.3s;
+    }
+    .remedy-card:hover {
+      transform: translateY(-5px);
+    }
+    .remedy-card h3 {
+      color: #99f2c8;
+      margin-top: 0;
+    }
+    .dos, .donts {
+      margin-top: 1rem;
+    }
+    .dos h4 {
+      color: #a8e063;
+    }
+    .donts h4 {
+      color: #ff6b6b;
+    }
+    .remedy-card ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+    /* Form Section Styles */
+    .form-section h2 {
+      text-align: center;
+      color: #99f2c8;
+      margin-bottom: 2rem;
+    }
+    .form-container {
+      background: #2a2a2a;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #a8e063;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: calc(100% - 20px);
+      padding: 10px;
+      background: #333;
+      border: 1px solid #444;
+      border-radius: 8px;
+      color: #e0e0e0;
+    }
+    .form-group textarea {
+      height: 100px;
+      resize: vertical;
+    }
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(45deg, #56ab2f, #a8e063);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .submit-btn:hover {
+      background: linear-gradient(45deg, #a8e063, #56ab2f);
+    }
+    /* Custom Message Box */
+    #message-box {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(40, 40, 40, 0.9);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      display: none;
+      text-align: center;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🌿 Health Whisper</h1>
+    <nav>
+      <a href="#" data-section="home">Home</a>
+      <a href="#" data-section="herbs">Herbs</a>
+      <a href="#" data-section="remedies">Remedies</a>
+      <a href="#" data-section="contribute">Contribute</a>
+      <a href="#" data-section="feedback">Feedback</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    
+    <!-- Home Section -->
+    <section id="home" class="content-section active-section">
+      <div class="hero">
+        <h2>Why Health Whisper?</h2>
+        <p>In a world of constant change, natural wisdom provides a timeless foundation for well-being. Health Whisper is your modern guide to ancient herbal remedies. We believe in the power of a holistic approach to health, empowering you with a curated collection of remedies and insights passed down through generations. Our mission is to make this knowledge accessible, easy to understand, and relevant to your daily life, so you can nurture your health naturally.</p>
+        <a href="#herbs" class="btn">Explore Herbs</a>
+      </div>
+    </section>
+
+    <!-- Herbs Section -->
+    <section id="herbs" class="content-section">
+      <div class="search-bar">
+        <input type="text" id="herb-search" placeholder="Search herbs by name, benefit, or category...">
+      </div>
+      <div class="filters">
+        <button data-filter="all">All</button>
+        <button data-filter="immunity">🛡️ Immunity</button>
+        <button data-filter="digestion">🍵 Digestion</button>
+        <button data-filter="skin">✨ Skin & Hair</button>
+        <button data-filter="sleep">😴 Sleep</button>
+        <button data-filter="stress">🧘 Stress</button>
+        <button data-filter="detox">🍋 Detox</button>
+      </div>
+      <div class="grid" id="herb-grid"></div>
+    </section>
+
+    <!-- Herb Detail Section -->
+    <section id="detail" class="content-section">
+      <div class="detail-content" id="herb-content"></div>
+    </section>
+
+    <!-- Remedies Section -->
+    <section id="remedies" class="content-section">
+      <h2 style="color: #99f2c8; text-align: center;">Basic Home Remedies</h2>
+      <div class="remedy-card">
+        <h3>Cold & Cough</h3>
+        <p>A common ailment that can be soothed with a warm, natural concoction.</p>
+        <div class="dos">
+          <h4>✅ Do's</h4>
+          <ul>
+            <li>Drink warm turmeric milk to soothe the throat.</li>
+            <li>Inhale steam with a few drops of eucalyptus oil.</li>
+            <li>Eat honey mixed with ginger for cough relief.</li>
+          </ul>
+        </div>
+        <div class="donts">
+          <h4>❌ Don'ts</h4>
+          <ul>
+            <li>Avoid cold foods and drinks.</li>
+            <li>Don't consume dairy products if you have a lot of phlegm.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="remedy-card">
+        <h3>Indigestion</h3>
+        <p>Uncomfortable bloating and gas can be relieved with simple digestive aids.</p>
+        <div class="dos">
+          <h4>✅ Do's</h4>
+          <ul>
+            <li>Chew a small piece of ginger before a meal.</li>
+            <li>Drink a cup of warm water with a squeeze of lemon and a pinch of black salt.</li>
+            <li>Eat a small portion of plain yogurt to aid digestion.</li>
+          </ul>
+        </div>
+        <div class="donts">
+          <h4>❌ Don'ts</h4>
+          <ul>
+            <li>Avoid heavy, fried, or spicy foods.</li>
+            <li>Don't lie down immediately after eating.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="remedy-card">
+        <h3>Headache</h3>
+        <p>A natural way to alleviate tension and discomfort without medication.</p>
+        <div class="dos">
+          <h4>✅ Do's</h4>
+          <ul>
+            <li>Apply a few drops of peppermint oil on your temples.</li>
+            <li>Drink plenty of water to stay hydrated.</li>
+            <li>Find a dark, quiet place to rest.</li>
+          </ul>
+        </div>
+        <div class="donts">
+          <h4>❌ Don'ts</h4>
+          <ul>
+            <li>Avoid staring at screens for a long time.</li>
+            <li>Don't consume caffeine or alcohol.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="remedy-card">
+        <h3>Stress & Anxiety</h3>
+        <p>Natural remedies to calm the mind and body during times of stress.</p>
+        <div class="dos">
+          <h4>✅ Do's</h4>
+          <ul>
+            <li>Drink a calming cup of chamomile or holy basil (tulsi) tea.</li>
+            <li>Practice deep breathing exercises.</li>
+            <li>Consider a warm bath with a few drops of lavender essential oil.</li>
+          </ul>
+        </div>
+        <div class="donts">
+          <h4>❌ Don'ts</h4>
+          <ul>
+            <li>Avoid excessive caffeine and sugar.</li>
+            <li>Don't ignore the importance of a good night's sleep.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="remedy-card">
+        <h3>Skin Blemishes</h3>
+        <p>Simple, natural ways to keep your skin healthy and glowing from the inside out.</p>
+        <div class="dos">
+          <h4>✅ Do's</h4>
+          <ul>
+            <li>Apply a paste of aloe vera or sandalwood to soothe skin.</li>
+            <li>Drink plenty of water throughout the day.</li>
+            <li>Eat foods rich in antioxidants, like berries and green leafy vegetables.</li>
+          </ul>
+        </div>
+        <div class="donts">
+          <h4>❌ Don'ts</h4>
+          <ul>
+            <li>Don't pop pimples, as it can lead to scarring.</li>
+            <li>Avoid excessive sun exposure without proper protection.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="remedy-card">
+        <h3>Sore Throat</h3>
+        <p>Soothing relief for a scratchy or painful throat.</p>
+        <div class="dos">
+          <h4>✅ Do's</h4>
+          <ul>
+            <li>Gargle with warm salt water.</li>
+            <li>Drink herbal teas with honey and lemon.</li>
+            <li>Sip on warm broth or soups.</li>
+          </ul>
+        </div>
+        <div class="donts">
+          <h4>❌ Don'ts</h4>
+          <ul>
+            <li>Avoid talking too much or yelling.</li>
+            <li>Don't consume very cold or very hot foods and drinks.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="remedy-card">
+        <h3>Muscle Aches</h3>
+        <p>Natural ways to ease pain and promote muscle relaxation.</p>
+        <div class="dos">
+          <h4>✅ Do's</h4>
+          <ul>
+            <li>Apply a warm compress or soak in a hot bath with Epsom salts.</li>
+            <li>Massage the affected area with warm oil.</li>
+            <li>Stay hydrated and rest the muscles.</li>
+          </ul>
+        </div>
+        <div class="donts">
+          <h4>❌ Don'ts</h4>
+          <ul>
+            <li>Avoid strenuous activities that might worsen the pain.</li>
+            <li>Don't apply ice for a prolonged period, as it can restrict blood flow.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Contribute Section -->
+    <section id="contribute" class="content-section form-section">
+      <div class="form-container">
+        <h2>Contribute a Remedy</h2>
+        <p style="text-align: center; color: #b0b0b0; margin-bottom: 2rem;">Help us grow our community knowledge by sharing a remedy that works for you. Your submission will be reviewed before being added.</p>
+        <form id="contribute-form">
+          <div class="form-group">
+            <label for="remedy-name">Remedy Name</label>
+            <input type="text" id="remedy-name" required>
+          </div>
+          <div class="form-group">
+            <label for="remedy-description">Description</label>
+            <textarea id="remedy-description" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="remedy-dos">Do's (separate with commas)</label>
+            <textarea id="remedy-dos" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="remedy-donts">Don'ts (separate with commas)</label>
+            <textarea id="remedy-donts" required></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Submit Remedy</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Feedback Section -->
+    <section id="feedback" class="content-section form-section">
+      <div class="form-container">
+        <h2>Give Us Feedback</h2>
+        <p style="text-align: center; color: #b0b0b0; margin-bottom: 2rem;">Tell us what you love or how we can improve. Your feedback helps us make Health Whisper better for everyone.</p>
+        <form id="feedback-form">
+          <div class="form-group">
+            <label for="feedback-name">Your Name</label>
+            <input type="text" id="feedback-name">
+          </div>
+          <div class="form-group">
+            <label for="feedback-email">Your Email</label>
+            <input type="email" id="feedback-email">
+          </div>
+          <div class="form-group">
+            <label for="feedback-message">Your Message</label>
+            <textarea id="feedback-message" required></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Send Feedback</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="message-box"></div>
+
+  <script>
+    const herbs = [
+      {
+        id: "turmeric",
+        name: "Turmeric",
+        gujarati: "હળદર",
+        short: "Golden spice for immunity and healing.",
+        category: ['immunity', 'skin'],
+        color: "linear-gradient(135deg, #E65100, #FF6F00)",
+        benefits: ['Boosts immunity', 'Reduces inflammation', 'Promotes wound healing', 'Supports digestion', 'Improves skin glow'],
+        uses: ['Turmeric milk for immunity', 'Paste for skin glow'],
+        precautions: ['Avoid high doses during pregnancy']
+      },
+      {
+        id: "tulsi",
+        name: "Tulsi",
+        gujarati: "તુલસી",
+        short: "Sacred leaf with powerful healing.",
+        category: ['immunity', 'digestion', 'stress'],
+        color: "linear-gradient(135deg, #1B5E20, #004D40)",
+        benefits: ['Boosts respiratory health', 'Supports digestion', 'Reduces stress', 'Enhances immunity'],
+        uses: ['Tulsi tea', 'Chew leaves for immunity'],
+        precautions: ['Avoid excessive intake']
+      },
+      {
+        id: "ginger",
+        name: "Ginger",
+        gujarati: "આદુ",
+        short: "Warming root for digestion and immunity.",
+        category: ['digestion', 'immunity'],
+        color: "linear-gradient(135deg, #9E9D24, #B71C1C)",
+        benefits: ['Relieves nausea', 'Aids digestion', 'Boosts immunity', 'Reduces inflammation'],
+        uses: ['Ginger tea', 'Raw with honey'],
+        precautions: ['Avoid high doses in pregnancy']
+      },
+      {
+        id: "valerian",
+        name: "Valerian Root",
+        gujarati: "જટામાસી",
+        short: "Calming root for sleep and anxiety.",
+        category: ['sleep', 'stress'],
+        color: "linear-gradient(135deg, #5D4037, #3E2723)",
+        benefits: ['Improves sleep', 'Reduces anxiety', 'Calms mind'],
+        uses: ['Valerian tea', 'Capsule supplements'],
+        precautions: ['May cause drowsiness']
+      },
+      {
+        id: "holy-rose",
+        name: "Rose",
+        gujarati: "ગુલાબ",
+        short: "Soothing petals for skin and mood.",
+        category: ['skin', 'sleep'],
+        color: "linear-gradient(135deg, #AD1457, #6A1B9A)",
+        benefits: ['Soothes skin', 'Calms mind', 'Improves mood'],
+        uses: ['Rose water', 'Rose tea'],
+        precautions: ['Safe generally']
+      },
+      {
+        id: "lemon",
+        name: "Lemon",
+        gujarati: "લીંબુ",
+        short: "Citrus fruit for detox and immunity.",
+        category: ['immunity', 'detox'],
+        color: "linear-gradient(135deg, #FFD600, #F57F17)",
+        benefits: ['Rich in vitamin C', 'Boosts immunity', 'Aids digestion'],
+        uses: ['Lemon water', 'Add in salads'],
+        precautions: ['Avoid on empty stomach for acidity']
+      },
+      {
+        id: "ashwagandha",
+        name: "Ashwagandha",
+        gujarati: "અશ્વગંધા",
+        short: "Ancient root for stress and vitality.",
+        category: ['stress', 'immunity', 'sleep'],
+        color: "linear-gradient(135deg, #795548, #3E2723)",
+        benefits: ['Reduces stress and cortisol levels', 'Improves sleep quality', 'Boosts energy and vitality', 'Supports cognitive function'],
+        uses: ['Powder in milk or water', 'Capsules'],
+        precautions: ['Consult a doctor if pregnant or have a thyroid condition']
+      },
+      {
+        id: "neem",
+        name: "Neem",
+        gujarati: "લીમડો",
+        short: "Powerful leaves for purification and skin health.",
+        category: ['skin', 'detox'],
+        color: "linear-gradient(135deg, #1B5E20, #004D40)",
+        benefits: ['Purifies blood', 'Promotes healthy skin', 'Supports oral hygiene'],
+        uses: ['Neem oil for skin', 'Chewing neem leaves', 'Neem-based toothpaste'],
+        precautions: ['Avoid prolonged use for internal consumption']
+      },
+      {
+        id: "aloevera",
+        name: "Aloe Vera",
+        gujarati: "કુંવારપાઠું",
+        short: "Soothing gel for skin and digestive health.",
+        category: ['skin', 'digestion'],
+        color: "linear-gradient(135deg, #00695C, #004D40)",
+        benefits: ['Soothes sunburn', 'Aids digestion', 'Hydrates skin'],
+        uses: ['Topical gel for skin', 'Aloe vera juice'],
+        precautions: ['Do not consume if you have digestive issues']
+      },
+    ];
+
+    const sections = {
+      home: document.getElementById('home'),
+      herbs: document.getElementById('herbs'),
+      detail: document.getElementById('detail'),
+      remedies: document.getElementById('remedies'),
+      contribute: document.getElementById('contribute'),
+      feedback: document.getElementById('feedback')
+    };
+    const herbGrid = document.getElementById('herb-grid');
+    const herbContent = document.getElementById('herb-content');
+    const herbSearch = document.getElementById('herb-search');
+    const filterButtons = document.querySelectorAll('.filters button');
+    const contributeForm = document.getElementById('contribute-form');
+    const feedbackForm = document.getElementById('feedback-form');
+    const messageBox = document.getElementById('message-box');
+
+    function showSection(sectionId, dataId = null) {
+      for (const id in sections) {
+        sections[id].classList.remove('active-section');
+      }
+      sections[sectionId].classList.add('active-section');
+
+      if (sectionId === 'detail' && dataId) {
+        renderHerbDetail(dataId);
+      } else if (sectionId === 'herbs') {
+        renderHerbs(herbs);
+      }
+    }
+
+    function renderHerbs(list) {
+      herbGrid.innerHTML = '';
+      const categoryMap = {
+        'immunity': '🛡️ Immunity',
+        'digestion': '🍵 Digestion',
+        'skin': '✨ Skin & Hair',
+        'sleep': '😴 Sleep',
+        'stress': '🧘 Stress',
+        'detox': '🍋 Detox'
+      };
+      
+      list.forEach(h => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.style.background = h.color;
+        div.innerHTML = `
+          <h3>${h.name} (${h.gujarati})</h3>
+          <p>${h.short}</p>
+          <div class="tag-container">
+            ${h.category.map(cat => `<span class="tag">${categoryMap[cat]}</span>`).join('')}
+          </div>
+        `;
+        div.onclick = () => {
+          window.location.hash = `#detail=${h.id}`;
+        };
+        herbGrid.appendChild(div);
+      });
+    }
+
+    function renderHerbDetail(id) {
+      const herb = herbs.find(h => h.id === id);
+      if (herb) {
+        herbContent.innerHTML = `
+          <h2>${herb.name} (${herb.gujarati})</h2>
+          <h3>🌟 Benefits</h3>
+          <ul>${herb.benefits.map(b => '<li>' + b + '</li>').join('')}</ul>
+          <h3>🍵 Uses</h3>
+          <ul>${herb.uses.map(u => '<li>' + u + '</li>').join('')}</ul>
+          <h3>⚠️ Precautions</h3>
+          <ul>${herb.precautions.map(p => '<li>' + p + '</li>').join('')}</ul>
+        `;
+      } else {
+        herbContent.innerHTML = "<p>Herb not found.</p>";
+      }
+    }
+
+    function showMessage(message, duration = 3000) {
+      messageBox.textContent = message;
+      messageBox.style.display = 'block';
+      setTimeout(() => {
+        messageBox.style.display = 'none';
+      }, duration);
+    }
+
+    function handleHashChange() {
+      const hash = window.location.hash.substring(1);
+      if (hash.startsWith('detail=')) {
+        const herbId = hash.split('=')[1];
+        showSection('detail', herbId);
+      } else if (sections[hash]) {
+        showSection(hash);
+      } else {
+        showSection('home');
+      }
+    }
+
+    // Event Listeners
+    document.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const sectionId = e.target.dataset.section;
+        window.location.hash = sectionId === 'home' ? '' : sectionId;
+      });
+    });
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        const category = e.target.dataset.filter;
+        if (category === 'all') {
+          renderHerbs(herbs);
+        } else {
+          renderHerbs(herbs.filter(h => h.category.includes(category)));
+        }
+      });
+    });
+
+    herbSearch.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      const filteredHerbs = herbs.filter(h =>
+        h.name.toLowerCase().includes(query) ||
+        h.short.toLowerCase().includes(query) ||
+        h.category.some(cat => cat.toLowerCase().includes(query))
+      );
+      renderHerbs(filteredHerbs);
+    });
+
+    contributeForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      showMessage('Thank you for your contribution! Your remedy has been submitted for review.');
+      contributeForm.reset();
+    });
+
+    feedbackForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      showMessage('Thank you for your feedback!');
+      feedbackForm.reset();
+    });
+
+    // Initial page load
+    window.addEventListener('hashchange', handleHashChange);
+    handleHashChange();
+  </script>
+</body>
+</html>    </ul>
+  </section>
+
+  <!-- Contribute -->
+  <section id="contribute">
+    <h2>Contribute Remedy</h2>
+    <div class="form-box">
+      <input type="text" id="remedyName" placeholder="Remedy Name"/>
+      <textarea id="remedyDesc" placeholder="Remedy Description"></textarea>
+      <button onclick="addRemedy()">Add Remedy</button>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <h2>Contact / Feedback</h2>
+    <div class="form-box">
+      <input type="text" placeholder="Your Name"/>
+      <input type="email" placeholder="Your Email"/>
+      <textarea placeholder="Your Message"></textarea>
+      <button>Send Message</button>
+    </div>
+  </section>
+
+  <div id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})">⬆️</div>
+
+  <footer>
+    © 2025 Health Whisper • Natural Healing for Everyone 🌿
+  </footer>
+
+  <script>
+    function addRemedy() {
+      const name = document.getElementById("remedyName").value;
+      const desc = document.getElementById("remedyDesc").value;
+      if (name && desc) {
+        const grid = document.getElementById("everydayGrid");
+        const div = document.createElement("div");
+        div.className = "everyday-card";
+        div.innerHTML = `<h3>${name}</h3><p>${desc}</p>`;
+        grid.appendChild(div);
+        document.getElementById("remedyName").value = "";
+        document.getElementById("remedyDesc").value = "";
+      }
+    }
+
+    function searchRemedies() {
+      const input = document.getElementById("search").value.toLowerCase();
+      const cards = document.querySelectorAll("#everydayGrid .everyday-card");
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(input) ? "" : "none";
+      });
+    }
+
+    function filterRemedies(category) {
+      const cards = document.querySelectorAll('#herbal-remedies .card');
+      cards.forEach(card => {
+        if (category === 'all' || card.classList.contains(category)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    window.onscroll = function() {
+      document.getElementById("backToTop").style.display =
+        document.documentElement.scrollTop > 300 ? "block" : "none";
+    };
+  </script>
+</body>
+</html>
