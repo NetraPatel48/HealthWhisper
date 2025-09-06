@@ -166,7 +166,7 @@
       font-size: 1.1rem;
       color: #b0b0b0;
     }
-    /* Herbs Section Styles */
+    /* Herbs & Recipes Section Styles */
     .herb-search-bar {
       text-align: center;
       padding: 1rem;
@@ -248,7 +248,6 @@
     
     .card.loading {
       background: #333;
-      /* Optional: show a loading indicator */
     }
     
     .card:hover {
@@ -293,7 +292,7 @@
       font-size: 2rem;
       margin-top: 0;
     }
-    .detail-card .gujarati-name {
+    .detail-card .gujarati-name, .detail-card .author {
       text-align: center;
       color: #b0b0b0;
       font-style: italic;
@@ -305,11 +304,10 @@
     }
     .detail-card li {
       margin-bottom: 0.5rem;
-      padding-left: 1.5rem;
       position: relative;
+      padding-left: 1.5rem;
     }
     .detail-card li::before {
-      content: '🌱';
       position: absolute;
       left: 0;
     }
@@ -317,6 +315,9 @@
       color: #a8e063;
       margin-top: 1.5rem;
     }
+    .detail-card .ingredient-list li::before { content: '🌿'; }
+    .detail-card .instruction-list li::before { content: '🥣'; }
+    .detail-card .benefit-list li::before { content: '✨'; }
     .back-btn {
       display: inline-block;
       margin-bottom: 1.5rem;
@@ -419,6 +420,7 @@
     <nav>
       <a data-page="home-section">Home</a>
       <a data-page="herbs-section">Herbs</a>
+      <a data-page="recipes-section">Recipes</a>
       <a data-page="contribute-section">Contribute</a>
       <a data-page="feedback-section">Feedback</a>
     </nav>
@@ -446,23 +448,47 @@
 
     <section id="herbs-section" class="page-section">
       <h2 style="color: #99f2c8; text-align: center;">Herbs</h2>
-      <div id="list-view">
+      <div id="herb-list-view">
         <div class="herb-search-bar">
           <input type="text" id="herb-search" placeholder="Search herbs by name or benefit...">
         </div>
         <div class="filters">
-          <button class="active" data-category="all">All</button>
-          <button data-category="immunity">Immunity</button>
-          <button data-category="digestion">Digestion</button>
-          <button data-category="skin">Skin & Hair</button>
-          <button data-category="sleep">Sleep</button>
-          <button data-category="stress">Stress</button>
+          <button class="active" data-category="all" data-filter-type="herbs">All</button>
+          <button data-category="immunity" data-filter-type="herbs">Immunity</button>
+          <button data-category="digestion" data-filter-type="herbs">Digestion</button>
+          <button data-category="skin" data-filter-type="herbs">Skin & Hair</button>
+          <button data-category="sleep" data-filter-type="herbs">Sleep</button>
+          <button data-category="stress" data-filter-type="herbs">Stress</button>
         </div>
         <div class="grid" id="herbGrid"></div>
       </div>
-      <div id="detail-view" class="detail-view">
-        <a href="#" id="back-to-list" class="back-btn">← Back to List</a>
+      <div id="herb-detail-view" class="detail-view">
+        <a href="#" id="back-to-herbs" class="back-btn">← Back to Herbs</a>
         <div class="detail-card" id="herbDetail"></div>
+      </div>
+    </section>
+
+    <section id="recipes-section" class="page-section">
+      <h2 style="color: #99f2c8; text-align: center;">Herbal Recipes</h2>
+      <div id="recipe-list-view">
+        <div class="herb-search-bar">
+          <input type="text" id="recipe-search" placeholder="Search recipes by name or ingredient...">
+        </div>
+        <div class="filters">
+          <button class="active" data-category="all" data-filter-type="recipes">All</button>
+          <button data-category="beverage" data-filter-type="recipes">Beverages</button>
+          <button data-category="soup" data-filter-type="recipes">Soups</button>
+          <button data-category="dessert" data-filter-type="recipes">Desserts</button>
+          <button data-category="savory" data-filter-type="recipes">Savory</button>
+          <button data-category="snack" data-filter-type="recipes">Snacks</button>
+          <button data-category="stress" data-filter-type="recipes">Stress</button>
+          <button data-category="detox" data-filter-type="recipes">Detox</button>
+        </div>
+        <div class="grid" id="recipeGrid"></div>
+      </div>
+      <div id="recipe-detail-view" class="detail-view">
+        <a href="#" id="back-to-recipes" class="back-btn">← Back to Recipes</a>
+        <div class="detail-card" id="recipeDetail"></div>
       </div>
     </section>
 
@@ -560,6 +586,24 @@
         description: "Natural ways to ease pain and promote muscle relaxation.",
         dos: ["Apply a warm compress or soak in a hot bath with Epsom salts.", "Massage the affected area with warm oil.", "Stay hydrated and rest the muscles."],
         donts: ["Avoid strenuous activities that might worsen the pain.", "Don't apply ice for a prolonged period, as it can restrict blood flow."]
+      },
+      {
+        name: "Insomnia",
+        description: "Natural ways to promote a restful night's sleep.",
+        dos: ["Drink a warm cup of chamomile tea before bed.", "Create a dark, cool, and quiet environment for sleep.", "Practice deep relaxation or meditation."],
+        donts: ["Avoid caffeine and screens before bedtime.", "Don't consume heavy meals close to sleep."]
+      },
+      {
+        name: "Constipation",
+        description: "Simple solutions for digestive regularity and comfort.",
+        dos: ["Drink plenty of water throughout the day.", "Eat fiber-rich foods like fruits and vegetables.", "Consider a warm drink with lemon and honey in the morning."],
+        donts: ["Avoid processed foods and junk food.", "Don't ignore the urge to go to the bathroom."]
+      },
+      {
+        name: "Joint Pain",
+        description: "Natural ways to reduce inflammation and soothe aching joints.",
+        dos: ["Use a warm compress on the affected area.", "Consume turmeric and ginger regularly.", "Gently stretch the joints."],
+        donts: ["Avoid inflammatory foods like refined sugar.", "Don't overexert the affected joint."]
       }
     ];
 
@@ -592,7 +636,7 @@
           gujarati: "આદુ",
           short: "Warming root for digestion and immunity.",
           category: ['digestion', 'immunity'],
-          image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/ginger.jpg?raw=true",
+          image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/ginger.jpg?raw=true)",
           benefits: ['Relieves nausea', 'Aids digestion', 'Boosts immunity', 'Reduces inflammation'],
           uses: ['Ginger tea', 'Fresh ginger in meals'],
           precautions: ['May thin blood, consult doctor if on blood thinners']
@@ -603,7 +647,7 @@
           gujarati: "અશ્વગંધા",
           short: "Powerful adaptogen for stress and vitality.",
           category: ['stress', 'sleep', 'immunity'],
-          image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/ashwagandha.jpg?raw=true",
+          image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/ashwagandha.jpg?raw=truel)",
           benefits: ['Reduces stress and anxiety', 'Improves sleep quality', 'Boosts energy and vitality', 'Supports cognitive function'],
           uses: ['Ashwagandha powder in milk', 'Capsule supplements'],
           precautions: ['Avoid high doses in pregnancy']
@@ -817,17 +861,6 @@
         uses: ['Peppermint tea', 'Essential oil on temples'],
         precautions: ['May worsen acid reflux in some individuals']
       },
-       {
-        id: "calendula",
-        name: "Calendula",
-        gujarati: "ગોલગંદા",
-        short: "Soothing flower for skin and healing.",
-        category: ['skin', 'immunity'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/calendula.jpg?raw=true",
-        benefits: ['Soothes skin inflammation', 'Heals wounds and cuts', 'Anti-inflammatory properties', 'Antimicrobial'],
-        uses: ['Topical balms and oils', 'Tea for internal use'],
-        precautions: ['Avoid if you have an allergy to plants in the daisy family (ragweed, chamomile)']
-      },
       {
         id: "echinacea",
         name: "Echinacea",
@@ -838,9 +871,20 @@
         benefits: ['Boosts the immune system', 'Fights colds and flu', 'Reduces inflammation'],
         uses: ['Tea, capsules, or tincture'],
         precautions: ['Not recommended for long-term use (more than 8 weeks)']
+      },
+      {
+        id: "calendula",
+        name: "Calendula",
+        gujarati: "ગોલગંદા",
+        short: "Soothing flower for skin and healing.",
+        category: ['skin', 'immunity'],
+        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/calendula.jpg?raw=true",
+        benefits: ['Soothes skin inflammation', 'Heals wounds and cuts', 'Anti-inflammatory properties', 'Antimicrobial'],
+        uses: ['Topical balms and oils', 'Tea for internal use'],
+        precautions: ['Avoid if you have an allergy to plants in the daisy family (ragweed, chamomile)']
       }
     ];
-    
+
     const recipes = [
       {
         id: "turmeric-ginger-tea",
@@ -848,7 +892,7 @@
         author: "Ayurvedic tradition",
         short: "A powerful anti-inflammatory and immune-boosting beverage.",
         category: ['beverage', 'immunity'],
-        image: "https://placehold.co/400x450/fff8dc/000?text=Turmeric\nGinger\nTea",
+        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/turmeric%20ginger%20tea.jpg?raw=true",
         ingredients: ['1 cup water', '1 tsp grated fresh ginger', '½ tsp turmeric powder', '1 tsp honey', 'A pinch of black pepper'],
         instructions: ['Bring water to a boil.', 'Add ginger and turmeric, and simmer for 5-10 minutes.', 'Strain the tea into a cup.', 'Add honey and a pinch of black pepper, and stir well.'],
         benefits: ['Reduces inflammation', 'Boosts immunity', 'Aids digestion', 'Soothes a sore throat']
@@ -859,7 +903,7 @@
         author: "Modern twist",
         short: "A refreshing drink to aid digestion and hydration.",
         category: ['beverage', 'detox', 'digestion'],
-        image: "https://placehold.co/500x300/a2f3f1/000?text=Mint\nCucumber",
+        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/cucumber%20mint%20water.jpg?raw=true",
         ingredients: ['1 liter water', '½ cucumber, sliced', '10-12 fresh mint leaves', '1 lemon, sliced'],
         instructions: ['Combine all ingredients in a pitcher.', 'Refrigerate for at least 2 hours to let flavors infuse.', 'Serve chilled.'],
         benefits: ['Hydrates the body', 'Aids in digestion', 'Provides a refreshing taste']
@@ -870,7 +914,7 @@
         author: "Traditional remedy",
         short: "A savory, warm soup to fight off colds and congestion.",
         category: ['soup', 'immunity', 'savory'],
-        image: "https://placehold.co/600x400/98ff98/000?text=Garlic+Thyme+Soup",
+        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/garlic%20thyme%20soup.jpg?raw=true",
         ingredients: ['1 head of garlic, cloves peeled and smashed', '2 tbsp olive oil', '4 cups vegetable broth', '1 tsp fresh thyme leaves', 'Salt and black pepper to taste'],
         instructions: ['In a pot, sauté garlic in olive oil until fragrant.', 'Add vegetable broth and thyme.', 'Bring to a boil, then reduce heat and simmer for 15 minutes.', 'Season with salt and pepper.'] ,
         benefits: ['Boosts immune system', 'Soothes cold symptoms', 'Has antibacterial properties']
@@ -881,7 +925,7 @@
         author: "Culinary adaptation",
         short: "A gentle dessert to promote relaxation and restful sleep.",
         category: ['dessert', 'sleep', 'stress'],
-        image: "https://placehold.co/350x450/c8a2c8/000?text=Lavender\nCookies",
+        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/lavender%20oatmeal%20cookies.jpg?raw=true",
         ingredients: ['1 cup rolled oats', '½ cup all-purpose flour', '½ tsp baking soda', '½ tsp salt', '½ cup unsalted butter, softened', '½ cup brown sugar', '¼ cup granulated sugar', '1 large egg', '1 tsp vanilla extract', '1 tbsp dried lavender buds'],
         instructions: ['Preheat oven to 350°F (175°C).', 'In a bowl, whisk together oats, flour, baking soda, and salt.', 'In a separate bowl, cream butter and sugars.', 'Beat in the egg and vanilla.', 'Gradually add dry ingredients to wet ingredients.', 'Fold in lavender buds.', 'Drop spoonfuls onto a baking sheet and bake for 10-12 minutes.'],
         benefits: ['Promotes relaxation', 'Aids in restful sleep', 'Reduces anxiety']
@@ -892,7 +936,7 @@
         author: "Healthy living recipe",
         short: "A creamy, soothing smoothie perfect for unwinding after a long day.",
         category: ['beverage', 'snack', 'sleep', 'stress'],
-        image: "https://placehold.co/400x550/fffd9e/000?text=Chamomile\nSmoothie",
+        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/chamomile%20smoothie.jpg?raw=true",
         ingredients: ['1 ripe banana, frozen', '1 cup brewed chamomile tea, cooled', '½ cup Greek yogurt or milk of choice', '1 tbsp honey or maple syrup', 'A handful of ice (optional)'],
         instructions: ['Brew chamomile tea and let it cool completely.', 'Add the frozen banana, cooled tea, yogurt, and sweetener to a blender.', 'Blend until smooth and creamy.', 'Pour into a glass and enjoy immediately.'],
         benefits: ['Calms the mind', 'Promotes relaxation', 'Soothes digestion']
@@ -903,7 +947,7 @@
         author: "Simple kitchen classic",
         short: "A savory and aromatic side dish that's rich in antioxidants.",
         category: ['savory'],
-        image: "https://placehold.co/500x350/a8a863/000?text=Rosemary\nRoasted\nVeg",
+        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/rosemary%20roased%20veggies.jpg?raw=true",
         ingredients: ['2 cups mixed vegetables (carrots, potatoes, bell peppers)', '2 tbsp olive oil', '1 tbsp fresh rosemary, chopped', '2 cloves garlic, minced', 'Salt and black pepper to taste'],
         instructions: ['Preheat oven to 400°F (200°C).', 'Chop vegetables into bite-sized pieces.', 'In a large bowl, toss vegetables with olive oil, rosemary, garlic, salt, and pepper.', 'Spread in a single layer on a baking sheet.', 'Roast for 25-30 minutes, or until tender and lightly browned, stirring halfway through.'],
         benefits: ['Rich in antioxidants', 'Supports cognitive health', 'Delicious and nutrient-dense']
@@ -914,7 +958,7 @@
         author: "Mediterranean style",
         short: "A zesty and fresh dressing perfect for salads and grilled meats.",
         category: ['savory'],
-        image: "https://placehold.co/300x400/b8e0b8/000?text=Oregano\nLemon\nDressing",
+        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/oregano%20lemon%20dressing.jpg?raw=true",
         ingredients: ['¼ cup olive oil', '2 tbsp fresh lemon juice', '1 tsp dried oregano', '1 clove garlic, minced', 'Salt and black pepper to taste'],
         instructions: ['In a small bowl, whisk together the olive oil and lemon juice.', 'Stir in the dried oregano and minced garlic.', 'Season with salt and pepper.', 'Use immediately on your favorite salad or as a marinade.'],
         benefits: ['Supports gut health', 'Antioxidant-rich', 'Enhances the flavor of any dish']
@@ -925,7 +969,7 @@
         author: "Traditional remedy",
         short: "A hearty and warming soup packed with immune-supporting ingredients.",
         category: ['soup', 'immunity', 'savory'],
-        image: "https://placehold.co/600x400/e0c6a5/000?text=Lentil+Soup",
+        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/lentil%20soup.jpg?raw=true",
         ingredients: ['1 cup red lentils, rinsed', '6 cups vegetable broth', '1 onion, chopped', '2 carrots, chopped', '2 cloves garlic, minced', '1 tsp grated fresh ginger', '½ tsp turmeric powder', 'Salt and black pepper to taste'],
         instructions: ['In a large pot, combine lentils, broth, onion, carrots, garlic, ginger, and turmeric.', 'Bring to a boil, then reduce heat and simmer for 25-30 minutes, or until lentils are tender.', 'Season with salt and pepper. Serve hot.'],
         benefits: ['Boosts immunity', 'Provides plant-based protein', 'High in fiber and nutrients']
@@ -936,7 +980,7 @@
         author: "Simple fall recipe",
         short: "A sweet and comforting snack or dessert that aids digestion.",
         category: ['dessert', 'snack'],
-        image: "https://placehold.co/400x500/f8a5a5/000?text=Spiced\nApples",
+        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/cinnamon%20apples.jpg?raw=true",
         ingredients: ['2 apples, peeled and sliced', '1 tbsp butter or coconut oil', '1 tsp cinnamon', '1 tsp honey or maple syrup'],
         instructions: ['Melt butter in a pan over medium heat.', 'Add sliced apples and cook for 5-7 minutes, until they begin to soften.', 'Stir in cinnamon and honey, and cook for another 2-3 minutes, until the apples are tender and coated.', 'Serve warm.'],
         benefits: ['Aids digestion', 'Anti-inflammatory', 'Satisfies a sweet tooth naturally']
@@ -958,13 +1002,45 @@
         author: "Modern wellness kitchen",
         short: "A vibrant, nutrient-packed meal to support your immune system.",
         category: ['savory', 'immunity'],
-        image: "https://placehold.co/500x350/a8e063/000?text=Veggie+Stir-fry",
+        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/veggie%20stir%20fry.jpg?raw=true",
         ingredients: ['1 tbsp sesame oil', '2 cloves garlic, minced', '1 cup broccoli florets', '1 cup sliced bell peppers (mixed colors)', '1 cup chopped mushrooms', '½ cup chopped carrots', '2 tbsp soy sauce or tamari', '1 tbsp honey or maple syrup', '1 tsp grated fresh ginger'],
         instructions: ['Heat sesame oil in a large skillet or wok over high heat.', 'Add garlic, broccoli, bell peppers, mushrooms, and carrots.', 'Stir-fry for 5-7 minutes until vegetables are crisp-tender.', 'In a small bowl, whisk together soy sauce, honey, and ginger.', 'Pour sauce over vegetables and stir-fry for another minute until coated.', 'Serve hot, optionally over rice or noodles.'],
         benefits: ['Rich in vitamins and antioxidants', 'Supports immune function', 'A delicious way to eat more vegetables']
+      },
+      {
+        id: "cherry-smoothie",
+        name: "Anti-Inflammatory Cherry Smoothie",
+        author: "Modern wellness kitchen",
+        short: "A sweet treat with powerful anti-inflammatory benefits.",
+        category: ['beverage', 'snack', 'stress'],
+        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/cherry%20smoothie.jpg?raw=true",
+        ingredients: ['1 cup frozen dark cherries', '½ cup Greek yogurt', '½ cup almond milk', '1 tbsp chia seeds', '1 tsp honey'],
+        instructions: ['Combine all ingredients in a blender.', 'Blend until smooth and creamy.', 'Pour into a glass and serve immediately.'],
+        benefits: ['Rich in antioxidants', 'Reduces inflammation', 'Aids in muscle recovery']
+      },
+      {
+        id: "flaxseed-drink",
+        name: "Flaxseed Digestion Drink",
+        author: "Traditional health remedy",
+        short: "A simple, fiber-rich drink to support digestive regularity.",
+        category: ['beverage', 'digestion'],
+        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/flaxseed%20drink.jpg?raw=true",
+        ingredients: ['1 tbsp ground flaxseeds', '1 cup warm water', 'Optional: A squeeze of lemon'],
+        instructions: ['Stir the ground flaxseeds into the warm water.', 'Let it sit for 5 minutes to thicken slightly.', 'Add a squeeze of lemon if desired and drink.'],
+        benefits: ['Promotes bowel regularity', 'High in fiber and omega-3s', 'Aids in detoxification']
+      },
+      {
+        id: "lavender-tea",
+        name: "Relaxing Lavender Tea",
+        author: "Ayurvedic tradition",
+        short: "A fragrant and calming tea for winding down.",
+        category: ['beverage', 'sleep', 'stress'],
+        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/lavender%20tea.jpg?raw=true",
+        ingredients: ['1 tsp dried lavender buds', '1 cup boiling water', '1 tsp honey (optional)'],
+        instructions: ['Place lavender buds in a tea infuser or directly into a cup.', 'Pour boiling water over the buds and let steep for 5-10 minutes.', 'Strain out the buds, stir in honey if desired, and enjoy.'],
+        benefits: ['Promotes relaxation', 'Aids in restful sleep', 'Reduces anxiety']
       }
     ];
-
 
     const pages = document.querySelectorAll('.page-section');
     const navLinks = document.querySelectorAll('nav a');
@@ -1022,14 +1098,14 @@
     });
 
     // Herbs Section Logic
-    const listView = document.getElementById('list-view');
-    const detailView = document.getElementById('detail-view');
+    const herbListView = document.getElementById('herb-list-view');
+    const herbDetailView = document.getElementById('herb-detail-view');
     const herbGrid = document.getElementById('herbGrid');
     const herbSearch = document.getElementById('herb-search');
-    const filterButtons = document.querySelectorAll('.filters button');
-    const backButton = document.getElementById('back-to-list');
+    const herbFilterButtons = document.querySelectorAll('[data-filter-type="herbs"]');
+    const backToHerbs = document.getElementById('back-to-herbs');
 
-    let currentCategory = 'all';
+    let currentHerbCategory = 'all';
 
     function renderHerbs(list) {
       herbGrid.innerHTML = '';
@@ -1041,7 +1117,6 @@
         const div = document.createElement('div');
         div.className = 'card';
         
-        // This is a trick to get the card to match the image aspect ratio
         const img = new Image();
         img.onload = function() {
           const aspectRatio = this.naturalHeight / this.naturalWidth;
@@ -1050,8 +1125,7 @@
           div.classList.remove('loading');
         };
         img.src = h.image;
-        div.classList.add('loading'); // Show loading state while image loads
-
+        div.classList.add('loading');
         div.innerHTML = `
           <div class="card-content">
             <h3>${h.name} (${h.gujarati})</h3>
@@ -1066,8 +1140,8 @@
     function filterHerbs() {
       const query = herbSearch.value.toLowerCase();
       let filtered = herbs;
-      if (currentCategory !== 'all') {
-        filtered = filtered.filter(h => h.category.includes(currentCategory));
+      if (currentHerbCategory !== 'all') {
+        filtered = filtered.filter(h => h.category.includes(currentHerbCategory));
       }
       const finalFiltered = filtered.filter(h =>
         h.name.toLowerCase().includes(query) ||
@@ -1077,9 +1151,9 @@
       renderHerbs(finalFiltered);
     }
 
-    function filterByCategory(category) {
-      currentCategory = category;
-      filterButtons.forEach(btn => {
+    function filterHerbCategory(category) {
+      currentHerbCategory = category;
+      herbFilterButtons.forEach(btn => {
         btn.classList.remove('active');
         if (btn.dataset.category === category) {
           btn.classList.add('active');
@@ -1116,21 +1190,21 @@
         </div>
         ` : ''}
       `;
-      listView.style.display = 'none';
-      detailView.style.display = 'block';
+      herbListView.style.display = 'none';
+      herbDetailView.style.display = 'block';
     }
 
-    backButton.addEventListener('click', (e) => {
+    backToHerbs.addEventListener('click', (e) => {
       e.preventDefault();
-      listView.style.display = 'block';
-      detailView.style.display = 'none';
+      herbListView.style.display = 'block';
+      herbDetailView.style.display = 'none';
     });
     herbSearch.addEventListener('input', filterHerbs);
-    filterButtons.forEach(btn => {
-      btn.addEventListener('click', () => filterByCategory(btn.dataset.category));
+    herbFilterButtons.forEach(btn => {
+      btn.addEventListener('click', () => filterHerbCategory(btn.dataset.category));
     });
 
-     // Recipes Section Logic
+    // Recipes Section Logic
     const recipeListView = document.getElementById('recipe-list-view');
     const recipeDetailView = document.getElementById('recipe-detail-view');
     const recipeGrid = document.getElementById('recipeGrid');
@@ -1279,9 +1353,13 @@
         if (link.dataset.page === 'home-section') {
           renderRemedies(remedies);
         } else if (link.dataset.page === 'herbs-section') {
-          listView.style.display = 'block';
-          detailView.style.display = 'none';
+          herbListView.style.display = 'block';
+          herbDetailView.style.display = 'none';
           filterHerbs();
+        } else if (link.dataset.page === 'recipes-section') {
+          recipeListView.style.display = 'block';
+          recipeDetailView.style.display = 'none';
+          filterRecipes();
         }
       });
     });
@@ -1293,11 +1371,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
