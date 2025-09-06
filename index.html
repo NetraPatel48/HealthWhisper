@@ -840,7 +840,8 @@
         precautions: ['Not recommended for long-term use (more than 8 weeks)']
       }
     ];
-     const recipes = [
+    
+    const recipes = [
       {
         id: "turmeric-ginger-tea",
         name: "Turmeric Ginger Tea",
@@ -1129,6 +1130,109 @@
       btn.addEventListener('click', () => filterByCategory(btn.dataset.category));
     });
 
+     // Recipes Section Logic
+    const recipeListView = document.getElementById('recipe-list-view');
+    const recipeDetailView = document.getElementById('recipe-detail-view');
+    const recipeGrid = document.getElementById('recipeGrid');
+    const recipeSearch = document.getElementById('recipe-search');
+    const recipeFilterButtons = document.querySelectorAll('[data-filter-type="recipes"]');
+    const backToRecipes = document.getElementById('back-to-recipes');
+
+    let currentRecipeCategory = 'all';
+
+    function renderRecipes(list) {
+      recipeGrid.innerHTML = '';
+      if (list.length === 0) {
+        recipeGrid.innerHTML = '<p style="text-align: center; color: #b0b0b0; grid-column: 1 / -1;">No recipes found. Try a different search.</p>';
+        return;
+      }
+      list.forEach(r => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        
+        const img = new Image();
+        img.onload = function() {
+          const aspectRatio = this.naturalHeight / this.naturalWidth;
+          div.style.paddingTop = `calc(${aspectRatio * 100}% + 2rem)`;
+          div.style.backgroundImage = `url(${r.image})`;
+          div.classList.remove('loading');
+        };
+        img.src = r.image;
+        div.classList.add('loading');
+        div.innerHTML = `
+          <div class="card-content">
+            <h3>${r.name}</h3>
+            <p>${r.short}</p>
+          </div>
+        `;
+        div.onclick = () => showRecipeDetail(r.id);
+        recipeGrid.appendChild(div);
+      });
+    }
+
+    function filterRecipes() {
+      const query = recipeSearch.value.toLowerCase();
+      let filtered = recipes;
+      if (currentRecipeCategory !== 'all') {
+        filtered = filtered.filter(r => r.category.includes(currentRecipeCategory));
+      }
+      const finalFiltered = filtered.filter(r =>
+        r.name.toLowerCase().includes(query) ||
+        r.short.toLowerCase().includes(query) ||
+        r.ingredients.some(i => i.toLowerCase().includes(query))
+      );
+      renderRecipes(finalFiltered);
+    }
+
+    function filterRecipeCategory(category) {
+      currentRecipeCategory = category;
+      recipeFilterButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.category === category) {
+          btn.classList.add('active');
+        }
+      });
+      filterRecipes();
+    }
+
+    function showRecipeDetail(id) {
+      const recipe = recipes.find(r => r.id === id);
+      if (!recipe) return;
+      const detailContent = document.getElementById('recipeDetail');
+      detailContent.innerHTML = `
+        <h2 style="color: #99f2c8;">${recipe.name}</h2>
+        <p class="author">By: ${recipe.author}</p>
+        <p>${recipe.short}</p>
+        
+        <h3>Ingredients</h3>
+        <ul class="ingredient-list">
+          ${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}
+        </ul>
+        
+        <h3>Instructions</h3>
+        <ul class="instruction-list">
+          ${recipe.instructions.map(ins => `<li>${ins}</li>`).join('')}
+        </ul>
+
+        <h3>Benefits</h3>
+        <ul class="benefit-list">
+          ${recipe.benefits.map(b => `<li>${b}</li>`).join('')}
+        </ul>
+      `;
+      recipeListView.style.display = 'none';
+      recipeDetailView.style.display = 'block';
+    }
+
+    backToRecipes.addEventListener('click', (e) => {
+      e.preventDefault();
+      recipeListView.style.display = 'block';
+      recipeDetailView.style.display = 'none';
+    });
+    recipeSearch.addEventListener('input', filterRecipes);
+    recipeFilterButtons.forEach(btn => {
+      btn.addEventListener('click', () => filterRecipeCategory(btn.dataset.category));
+    });
+
     // Forms Logic
     const contributeForm = document.getElementById('contribute-form');
     const feedbackForm = document.getElementById('feedback-form');
@@ -1185,9 +1289,11 @@
     // Initial page load
     renderRemedies(remedies);
     filterHerbs();
+    filterRecipes(); // Call this to set up the recipe grid on first load
   </script>
 </body>
 </html>
+
 
 
 
