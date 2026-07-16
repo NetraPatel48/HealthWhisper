@@ -172,8 +172,8 @@ padding:30px;
 <p class="subtitle">
 Login to explore herbal remedies, healthy recipes and AI-powered healthcare information.
 </p>
-
-<form onsubmit="return loginUser()">
+    
+<form onsubmit="return loginUser(event)">
 
 <div class="input-box">
 <label>Email</label>
@@ -225,24 +225,24 @@ else
 pass.type="password";
 
 }
+function loginUser(e){
 
-function loginUser(){
+if(e) e.preventDefault();
 
-let email=document.getElementById("email").value;
-let password=document.getElementById("password").value;
+const email=document.getElementById("email").value.trim();
+const password=document.getElementById("password").value.trim();
 
 if(email==="" || password===""){
-alert("Please fill all fields.");
-return false;
+    alert("Please enter email and password.");
+    return false;
 }
-
-alert("Login Successful!");
 
 window.location.href="HealthWhisper.html";
 
 return false;
-
 }
+    
+
 
 </script>
 
