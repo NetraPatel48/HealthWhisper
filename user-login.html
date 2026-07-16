@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Login - Health Whisper</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #1f4037, #212121);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #e0e0e0;
+    }
+
+    .login-container {
+      background: #2a2a2a;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      padding: 3rem 2rem;
+      width: 100%;
+      max-width: 400px;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-header h1 {
+      font-size: 2rem;
+      color: #99f2c8;
+      margin-bottom: 0.5rem;
+    }
+
+    .login-header p {
+      color: #b0b0b0;
+      font-size: 0.95rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #a8e063;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      background: #333;
+      border: 1px solid #444;
+      border-radius: 8px;
+      color: #e0e0e0;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #99f2c8;
+      box-shadow: 0 0 8px rgba(153, 242, 200, 0.3);
+    }
+
+    .form-group input::placeholder {
+      color: #777;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(45deg, #56ab2f, #a8e063);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .login-btn:hover {
+      background: linear-gradient(45deg, #a8e063, #56ab2f);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(168, 224, 99, 0.3);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .error-message {
+      background: #ff6b6b;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      display: none;
+      text-align: center;
+      animation: shake 0.3s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .toggle-auth {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #b0b0b0;
+      font-size: 0.9rem;
+    }
+
+    .toggle-auth a {
+      color: #99f2c8;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .toggle-auth a:hover {
+      color: #a8e063;
+    }
+
+    .form-section {
+      display: none;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    .links {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #444;
+    }
+
+    .links a {
+      display: block;
+      color: #99f2c8;
+      text-decoration: none;
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      transition: color 0.3s;
+    }
+
+    .links a:hover {
+      color: #a8e063;
+    }
+
+    .success-message {
+      background: #4caf50;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      display: none;
+      text-align: center;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-header">
+      <h1>🌿 Health Whisper</h1>
+      <p>User Account Portal</p>
+    </div>
+
+    <div class="success-message" id="successMessage"></div>
+    <div class="error-message" id="errorMessage"></div>
+
+    <!-- Login Form -->
+    <form id="loginForm" class="form-section active">
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input 
+          type="email" 
+          id="login-email" 
+          placeholder="Enter your email"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input 
+          type="password" 
+          id="login-password" 
+          placeholder="Enter your password"
+          required
+        >
+      </div>
+
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+
+    <!-- Register Form -->
+    <form id="registerForm" class="form-section">
+      <div class="form-group">
+        <label for="register-name">Full Name</label>
+        <input 
+          type="text" 
+          id="register-name" 
+          placeholder="Enter your full name"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="register-email">Email</label>
+        <input 
+          type="email" 
+          id="register-email" 
+          placeholder="Enter your email"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="register-password">Password</label>
+        <input 
+          type="password" 
+          id="register-password" 
+          placeholder="Create a password (min 6 characters)"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="register-password-confirm">Confirm Password</label>
+        <input 
+          type="password" 
+          id="register-password-confirm" 
+          placeholder="Confirm your password"
+          required
+        >
+      </div>
+
+      <button type="submit" class="login-btn">Register</button>
+    </form>
+
+    <div class="toggle-auth">
+      <p>
+        <span id="toggle-text">Don't have an account?</span>
+        <a id="toggle-btn" onclick="toggleForm()">Sign Up</a>
+      </p>
+    </div>
+
+    <div class="links">
+      <a href="index.html">← Back to Health Whisper</a>
+      <a href="login.html">🔐 Admin Portal</a>
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const errorMessage = document.getElementById('errorMessage');
+    const successMessage = document.getElementById('successMessage');
+    const toggleBtn = document.getElementById('toggle-btn');
+    const toggleText = document.getElementById('toggle-text');
+
+    // Check if user is already logged in
+    window.addEventListener('load', () => {
+      const user = localStorage.getItem('healthwhisper_current_user');
+      if (user) {
+        window.location.href = 'index.html';
+      }
+    });
+
+    // Toggle between login and register
+    function toggleForm() {
+      loginForm.classList.toggle('active');
+      registerForm.classList.toggle('active');
+      
+      if (loginForm.classList.contains('active')) {
+        toggleText.textContent = "Don't have an account?";
+        toggleBtn.textContent = 'Sign Up';
+      } else {
+        toggleText.textContent = 'Already have an account?';
+        toggleBtn.textContent = 'Login';
+      }
+      
+      errorMessage.classList.remove('show');
+      successMessage.classList.remove('show');
+    }
+
+    // Login handler
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      errorMessage.classList.remove('show');
+
+      // Get users from localStorage
+      let users = JSON.parse(localStorage.getItem('healthwhisper_users_list') || '[]');
+      const user = users.find(u => u.email === email && u.password === password);
+
+      if (user) {
+        localStorage.setItem('healthwhisper_current_user', JSON.stringify({
+          id: user.id,
+          name: user.name,
+          email: user.email
+        }));
+        
+        showSuccess('✅ Login successful! Redirecting...');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1500);
+      } else {
+        showError('❌ Invalid email or password');
+        document.getElementById('login-password').value = '';
+      }
+    });
+
+    // Register handler
+    registerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('register-name').value;
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      const confirmPassword = document.getElementById('register-password-confirm').value;
+
+      errorMessage.classList.remove('show');
+
+      if (password !== confirmPassword) {
+        showError('❌ Passwords do not match');
+        return;
+      }
+
+      if (password.length < 6) {
+        showError('❌ Password must be at least 6 characters');
+        return;
+      }
+
+      // Get existing users
+      let users = JSON.parse(localStorage.getItem('healthwhisper_users_list') || '[]');
+      
+      // Check if email already exists
+      if (users.some(u => u.email === email)) {
+        showError('❌ Email already registered');
+        return;
+      }
+
+      // Add new user
+      const newUser = {
+        id: Date.now(),
+        name: name,
+        email: email,
+        password: password
+      };
+
+      users.push(newUser);
+      localStorage.setItem('healthwhisper_users_list', JSON.stringify(users));
+
+      showSuccess('✅ Account created! Switching to login...');
+      registerForm.reset();
+      
+      setTimeout(() => {
+        toggleForm();
+      }, 1500);
+    });
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.classList.add('show');
+      setTimeout(() => {
+        errorMessage.classList.remove('show');
+      }, 4000);
+    }
+
+    function showSuccess(message) {
+      successMessage.textContent = message;
+      successMessage.classList.add('show');
+    }
+  </script>
+</body>
+</html>
