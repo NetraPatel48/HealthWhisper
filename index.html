@@ -23,20 +23,34 @@
     }
     nav {
       padding: 10px 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     nav a {
-      margin: 0 15px;
       color: white;
       text-decoration: none;
       font-weight: bold;
       transition: color 0.3s;
       cursor: pointer;
+      padding: 5px 15px;
     }
     nav a.active {
       color: #99f2c8;
       border-bottom: 2px solid #99f2c8;
     }
     nav a:hover {
+      color: #99f2c8;
+    }
+    nav a.admin-link {
+      background: #56ab2f;
+      border-radius: 5px;
+      color: white;
+      padding: 8px 15px;
+    }
+    nav a.admin-link:hover {
+      background: #44882e;
       color: #99f2c8;
     }
     .container {
@@ -230,7 +244,7 @@
     
     /* Card with background image */
     .card {
-      break-inside: avoid; /* This is key for the masonry layout */
+      break-inside: avoid;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       cursor: pointer;
@@ -244,6 +258,8 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
+      min-height: 250px;
+      overflow: hidden;
     }
     
     .card.loading {
@@ -254,14 +270,24 @@
       transform: translateY(-5px);
       box-shadow: 0 6px 15px rgba(0,0,0,0.5);
     }
+
+    .card img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      border-radius: 12px;
+    }
+
     .card-content {
       background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
       border-radius: 0 0 12px 12px;
       padding: 1.5rem;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      position: relative;
+      z-index: 2;
     }
     .card-content h3 {
       margin-top: 0;
@@ -328,6 +354,8 @@
       text-decoration: none;
       font-weight: bold;
       transition: background 0.3s;
+      cursor: pointer;
+      border: none;
     }
     .back-btn:hover {
       background: #44882e;
@@ -392,6 +420,7 @@
       font-size: 1rem;
       cursor: pointer;
       transition: background 0.3s;
+      font-weight: 600;
     }
     .submit-btn:hover {
       background: linear-gradient(45deg, #a8e063, #56ab2f);
@@ -410,11 +439,23 @@
       display: none;
       text-align: center;
       font-size: 1rem;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateX(-50%) translateY(100px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
     }
   </style>
 </head>
 <body>
-
+  
   <header>
     <h1>🌿 Health Whisper</h1>
     <nav>
@@ -423,6 +464,7 @@
       <a data-page="recipes-section">Recipes</a>
       <a data-page="contribute-section">Contribute</a>
       <a data-page="feedback-section">Feedback</a>
+      <a href="login.html" class="admin-link">🔐 Admin Login</a>
     </nav>
   </header>
 
@@ -442,7 +484,7 @@
 
       <div class="hero">
         <h2>Why Health Whisper?</h2>
-        <p>In a world of constant change, natural wisdom provides a timeless foundation for well-being. Health Whisper is your modern guide to ancient herbal remedies. We believe in the power of a holistic approach to health, empowering you with a curated collection of remedies and insights passed down through generations. Our mission is to make this knowledge accessible, easy to understand, and relevant to your daily life, so you can nurture your health naturally.</p>
+        <p>In a world of constant change, natural wisdom provides a timeless foundation for well-being. Health Whisper is your modern guide to ancient herbal remedies. We believe in the power of natural healing.</p>
       </div>
     </section>
 
@@ -463,7 +505,7 @@
         <div class="grid" id="herbGrid"></div>
       </div>
       <div id="herb-detail-view" class="detail-view">
-        <a href="#" id="back-to-herbs" class="back-btn">← Back to Herbs</a>
+        <button class="back-btn" onclick="goBackToHerbs()">← Back to Herbs</button>
         <div class="detail-card" id="herbDetail"></div>
       </div>
     </section>
@@ -487,7 +529,7 @@
         <div class="grid" id="recipeGrid"></div>
       </div>
       <div id="recipe-detail-view" class="detail-view">
-        <a href="#" id="back-to-recipes" class="back-btn">← Back to Recipes</a>
+        <button class="back-btn" onclick="goBackToRecipes()">← Back to Recipes</button>
         <div class="detail-card" id="recipeDetail"></div>
       </div>
     </section>
@@ -495,7 +537,7 @@
     <section id="contribute-section" class="page-section">
       <div class="form-container">
         <h2>Contribute a Remedy</h2>
-        <p style="text-align: center; color: #b0b0b0; margin-bottom: 2rem;">Help us grow our community knowledge by sharing a remedy that works for you. Your submission will be reviewed before being added.</p>
+        <p style="text-align: center; color: #b0b0b0; margin-bottom: 2rem;">Help us grow our community knowledge by sharing a remedy that works for you. Your submission will be reviewed by our admin team before publication.</p>
         <form id="contribute-form">
           <div class="form-group">
             <label for="remedy-name">Remedy Name</label>
@@ -525,11 +567,11 @@
         <form id="feedback-form">
           <div class="form-group">
             <label for="feedback-name">Your Name</label>
-            <input type="text" id="feedback-name">
+            <input type="text" id="feedback-name" required>
           </div>
           <div class="form-group">
             <label for="feedback-email">Your Email</label>
-            <input type="email" id="feedback-email">
+            <input type="email" id="feedback-email" required>
           </div>
           <div class="form-group">
             <label for="feedback-message">Your Message</label>
@@ -640,739 +682,187 @@
           benefits: ['Relieves nausea', 'Aids digestion', 'Boosts immunity', 'Reduces inflammation'],
           uses: ['Ginger tea', 'Fresh ginger in meals'],
           precautions: ['May thin blood, consult doctor if on blood thinners']
-      },
-      {
-          id: "ashwagandha",
-          name: "Ashwagandha",
-          gujarati: "અશ્વગંધા",
-          short: "Powerful adaptogen for stress and vitality.",
-          category: ['stress', 'sleep', 'immunity'],
-          image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/ashwagandha.jpg?raw=true",
-          benefits: ['Reduces stress and anxiety', 'Improves sleep quality', 'Boosts energy and vitality', 'Supports cognitive function'],
-          uses: ['Ashwagandha powder in milk', 'Capsule supplements'],
-          precautions: ['Avoid high doses in pregnancy']
-      },
-      {
-          id: "valerian",
-          name: "Valerian Root",
-          gujarati: "જટામાસી",
-          short: "Calming root for sleep and anxiety.",
-          category: ['sleep', 'stress'],
-          image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/valerian%20root.jpg?raw=true",
-          benefits: ['Improves sleep', 'Reduces anxiety', 'Calms mind'],
-          uses: ['Valerian tea', 'Capsule supplements'],
-          precautions: ['May cause drowsiness']
-      },
-      {
-          id: "holy-rose",
-          name: "Rose",
-          gujarati: "ગુલાબ",
-          short: "Soothing petals for skin and mood.",
-          category: ['skin', 'sleep', 'stress'],
-          image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/rose.jpg?raw=true",
-          benefits: ['Soothes skin', 'Calms mind', 'Improves mood'],
-          uses: ['Rose water', 'Rose tea'],
-          precautions: ['Safe generally']
-      },
-      {
-          id: "lemon",
-          name: "Lemon",
-          gujarati: "લીંબુ",
-          short: "Citrus fruit for detox and immunity.",
-          category: ['immunity', 'digestion'],
-          image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/lemon.jpg?raw=true",
-          benefits: ['Rich in vitamin C', 'Boosts immunity', 'Aids digestion'],
-          uses: ['Lemon water', 'Add in salads'],
-          precautions: ['Avoid on empty stomach for acidity']
-      },
-      {
-          id: "neem",
-          name: "Neem",
-          gujarati: "લીમડો",
-          short: "Bitter leaf for purifying and cleansing.",
-          category: ['skin', 'immunity'],
-          image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/neem.jpg?raw=true",
-          benefits: ['Purifies blood', 'Good for skin health', 'Antimicrobial properties', 'Supports dental hygiene'],
-          uses: ['Neem oil for skin', 'Chew leaves'],
-          precautions: ['Do not consume for prolonged periods']
-      },
-      {
-          id: "aloe-vera",
-          name: "Aloe Vera",
-          gujarati: "કુંવારપાઠું",
-          short: "Healing gel for skin and digestion.",
-          category: ['skin', 'digestion'],
-          image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/aloe%20vera.jpg?raw=true",
-          benefits: ['Soothes skin burns', 'Aids digestion', 'Hydrates skin', 'Relieves constipation'],
-          uses: ['Aloe gel on skin', 'Aloe vera juice'],
-          precautions: ['Can be a laxative in high doses']
-      },
-      {
-          id: "brahmi",
-          name: "Brahmi",
-          gujarati: "બ્રાહ્મી",
-          short: "Ancient herb for memory and focus.",
-          category: ['stress'],
-          image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/brahmi.jpg?raw=true",
-          benefits: ['Enhances memory', 'Improves focus', 'Reduces stress', 'Calms the nervous system'],
-          uses: ['Brahmi tea', 'Capsules', 'Oil for hair massage'],
-          precautions: ['Generally safe, but consult a doctor if on other medication']
-      },
-      {
-          id: "mint",
-          name: "Mint",
-          gujarati: "ફુદીનો",
-          short: "Refreshing leaf for digestion and fresh breath.",
-          category: ['digestion'],
-          image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/mintt.jpg?raw=true",
-          benefits: ['Aids digestion', 'Relieves headaches', 'Soothes an upset stomach'],
-          uses: ['Mint tea', 'Fresh leaves in salads or drinks'],
-          precautions: ['May worsen heartburn in some people']
-      },
-      {
-          id: "cinnamon",
-          name: "Cinnamon",
-          gujarati: "તજ",
-          short: "Sweet spice for blood sugar and circulation.",
-          category: ['digestion', 'immunity'],
-          image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/cinnamon.jpg?raw=true",
-          benefits: ['Helps regulate blood sugar', 'Anti-inflammatory', 'Antioxidant properties'],
-          uses: ['Cinnamon tea', 'Sprinkle on food'],
-          precautions: ['Large doses can be toxic to the liver']
-      },
-      {
-        id: "lavender",
-        name: "Lavender",
-        gujarati: "લવંડર",
-        short: "Fragrant flower for relaxation and sleep.",
-        category: ['sleep', 'stress'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/lavender.jpg?raw=true",
-        benefits: ['Promotes relaxation', 'Aids sleep', 'Reduces anxiety', 'Soothes minor burns'],
-        uses: ['Lavender essential oil for aromatherapy', 'Lavender tea'],
-        precautions: ['Some people may be sensitive to the oil on their skin']
-      },
-      {
-        id: "white-willow",
-        name: "White Willow Bark",
-        gujarati: "સફેદ વિલો છાલ",
-        short: "Nature's aspirin for pain and inflammation.",
-        category: ['stress'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/whitw%20willow%20bark.jpg?raw=true",
-        benefits: ['Reduces pain', 'Anti-inflammatory', 'Relieves fever'],
-        uses: ['Tea or tincture'],
-        precautions: ['Do not use if allergic to aspirin', 'Avoid during pregnancy or in children']
-      },
-      {
-        id: "honey",
-        name: "Honey",
-        gujarati: "મધ",
-        short: "Sweet nectar for soothing coughs and wounds.",
-        category: ['immunity', 'digestion', 'skin'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/honey.jpg?raw=true",
-        benefits: ['Soothes sore throats', 'Antibacterial properties', 'Promotes wound healing', 'Provides quick energy'],
-        uses: ['With warm water and lemon', 'Topically on wounds'],
-        precautions: ['Do not give to infants under one year old', 'High in sugar']
-      },
-      {
-        id: "oregano",
-        name: "Oregano",
-        gujarati: "ઓરેગાનો",
-        short: "Potent herb for immunity and gut health.",
-        category: ['immunity', 'digestion'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/oregano.png.jpg?raw=true",
-        benefits: ['Antioxidant-rich', 'Antimicrobial', 'Supports healthy gut flora', 'Aids in digestion'],
-        uses: ['Oil of oregano drops', 'Dried herb in cooking'],
-        precautions: ['Can be potent; use with care']
-      },
-      {
-        id: "rosemary",
-        name: "Rosemary",
-        gujarati: "રોઝમેરી",
-        short: "Aromatic herb for memory and hair growth.",
-        category: ['stress', 'skin'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/rosemary.jpg?raw=true",
-        benefits: ['Improves memory and concentration', 'Promotes hair growth', 'Rich in antioxidants', 'Relieves muscle pain'],
-        uses: ['Rosemary essential oil in hair products', 'Tea or tincture'],
-        precautions: ['High doses may cause stomach upset']
-      },
-      {
-        id: "black-pepper",
-        name: "Black Pepper",
-        gujarati: "કાળા મરી",
-        short: "Pungent spice that enhances nutrient absorption.",
-        category: ['digestion', 'immunity'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/black%20pepper.jpg?raw=true",
-        benefits: ['Aids in digestion', 'Enhances bioavailability of other herbs (like turmeric)', 'Antioxidant properties'],
-        uses: ['In cooking', 'Pinch in honey for cough'],
-        precautions: ['May cause stomach irritation in large quantities']
-      },
-      {
-        id: "garlic",
-        name: "Garlic",
-        gujarati: "લસણ",
-        short: "Powerful bulb for fighting germs and boosting immunity.",
-        category: ['immunity'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/garlic.jpg?raw=true",
-        benefits: ['Natural antibiotic', 'Boosts immune system', 'Reduces blood pressure'],
-        uses: ['Raw or cooked in food', 'Garlic tea'],
-        precautions: ['May cause bad breath and body odor', 'Can thin blood']
-      },
-      {
-        id: "elderberry",
-        name: "Elderberry",
-        gujarati: "એલ્ડરબેરી",
-        short: "Immunity-boosting berries for cold and flu.",
-        category: ['immunity'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/elderberry.png.jpg?raw=true",
-        benefits: ['Rich in antioxidants', 'Supports immune system', 'Shortens duration of colds and flu'],
-        uses: ['Elderberry syrup', 'Capsules or gummies'],
-        precautions: ['Raw elderberries are toxic and must be cooked']
-      },
-      {
-        id: "thyme",
-        name: "Thyme",
-        gujarati: "થાઇમ",
-        short: "Fragrant herb for respiratory and digestive health.",
-        category: ['immunity', 'digestion'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/thyme.jpg?raw=true",
-        benefits: ['Soothes coughs and bronchitis', 'Antimicrobial properties', 'Aids digestion'],
-        uses: ['Thyme tea', 'Inhaled steam'],
-        precautions: ['Use in moderation']
-      },
-      {
-        id: "chamomile",
-        name: "Chamomile",
-        gujarati: "કેમોમાઈલ",
-        short: "Gentle flower for relaxation and sleep.",
-        category: ['sleep', 'stress', 'digestion'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/chamomile.jpg?raw=true",
-        benefits: ['Promotes relaxation and sleep', 'Soothes upset stomach', 'Reduces anxiety'],
-        uses: ['Chamomile tea', 'Compresses for skin inflammation'],
-        precautions: ['May cause allergic reactions in some people']
-      },
-      {
-        id: "peppermint",
-        name: "Peppermint",
-        gujarati: "ફુદીનો",
-        short: "Cooling herb for digestion and headaches.",
-        category: ['digestion', 'stress'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/peppermint.jpg?raw=true",
-        benefits: ['Relieves indigestion and gas', 'Soothes headaches', 'Freshens breath'],
-        uses: ['Peppermint tea', 'Essential oil on temples'],
-        precautions: ['May worsen acid reflux in some individuals']
-      },
-      {
-        id: "echinacea",
-        name: "Echinacea",
-        gujarati: "એચિનેસિયા",
-        short: "Immune-boosting flower for fighting infections.",
-        category: ['immunity'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/echinacea.jpg?raw=true",
-        benefits: ['Boosts the immune system', 'Fights colds and flu', 'Reduces inflammation'],
-        uses: ['Tea, capsules, or tincture'],
-        precautions: ['Not recommended for long-term use (more than 8 weeks)']
-      },
-      {
-        id: "calendula",
-        name: "Calendula",
-        gujarati: "ગોલગંદા",
-        short: "Soothing flower for skin and healing.",
-        category: ['skin', 'immunity'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/calendula.jpg?raw=true",
-        benefits: ['Soothes skin inflammation', 'Heals wounds and cuts', 'Anti-inflammatory properties', 'Antimicrobial'],
-        uses: ['Topical balms and oils', 'Tea for internal use'],
-        precautions: ['Avoid if you have an allergy to plants in the daisy family (ragweed, chamomile)']
       }
     ];
 
-    const recipes = [
-      {
-        id: "turmeric-ginger-tea",
-        name: "Turmeric Ginger Tea",
-        author: "Ayurvedic tradition",
-        short: "A powerful anti-inflammatory and immune-boosting beverage.",
-        category: ['beverage', 'immunity'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/turmeric%20ginger%20tea.jpg?raw=true",
-        ingredients: ['1 cup water', '1 tsp grated fresh ginger', '½ tsp turmeric powder', '1 tsp honey', 'A pinch of black pepper'],
-        instructions: ['Bring water to a boil.', 'Add ginger and turmeric, and simmer for 5-10 minutes.', 'Strain the tea into a cup.', 'Add honey and a pinch of black pepper, and stir well.'],
-        benefits: ['Reduces inflammation', 'Boosts immunity', 'Aids digestion', 'Soothes a sore throat']
-      },
-      {
-        id: "mint-cucumber-detox",
-        name: "Mint Cucumber Detox Water",
-        author: "Modern twist",
-        short: "A refreshing drink to aid digestion and hydration.",
-        category: ['beverage', 'detox', 'digestion'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/cucumber%20mint%20water.jpg?raw=true",
-        ingredients: ['1 liter water', '½ cucumber, sliced', '10-12 fresh mint leaves', '1 lemon, sliced'],
-        instructions: ['Combine all ingredients in a pitcher.', 'Refrigerate for at least 2 hours to let flavors infuse.', 'Serve chilled.'],
-        benefits: ['Hydrates the body', 'Aids in digestion', 'Provides a refreshing taste']
-      },
-      {
-        id: "garlic-thyme-soup",
-        name: "Garlic Thyme Soup",
-        author: "Traditional remedy",
-        short: "A savory, warm soup to fight off colds and congestion.",
-        category: ['soup', 'immunity', 'savory'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/garlic%20thyme%20soup.jpg?raw=true",
-        ingredients: ['1 head of garlic, cloves peeled and smashed', '2 tbsp olive oil', '4 cups vegetable broth', '1 tsp fresh thyme leaves', 'Salt and black pepper to taste'],
-        instructions: ['In a pot, sauté garlic in olive oil until fragrant.', 'Add vegetable broth and thyme.', 'Bring to a boil, then reduce heat and simmer for 15 minutes.', 'Season with salt and pepper.'] ,
-        benefits: ['Boosts immune system', 'Soothes cold symptoms', 'Has antibacterial properties']
-      },
-      {
-        id: "lavender-oatmeal-cookies",
-        name: "Lavender Oatmeal Cookies",
-        author: "Culinary adaptation",
-        short: "A gentle dessert to promote relaxation and restful sleep.",
-        category: ['dessert', 'sleep', 'stress'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/lavender%20oatmeal%20cookies.jpg?raw=true",
-        ingredients: ['1 cup rolled oats', '½ cup all-purpose flour', '½ tsp baking soda', '½ tsp salt', '½ cup unsalted butter, softened', '½ cup brown sugar', '¼ cup granulated sugar', '1 large egg', '1 tsp vanilla extract', '1 tbsp dried lavender buds'],
-        instructions: ['Preheat oven to 350°F (175°C).', 'In a bowl, whisk together oats, flour, baking soda, and salt.', 'In a separate bowl, cream butter and sugars.', 'Beat in the egg and vanilla.', 'Gradually add dry ingredients to wet ingredients.', 'Fold in lavender buds.', 'Drop spoonfuls onto a baking sheet and bake for 10-12 minutes.'],
-        benefits: ['Promotes relaxation', 'Aids in restful sleep', 'Reduces anxiety']
-      },
-      {
-        id: "chamomile-smoothie",
-        name: "Chamomile Calming Smoothie",
-        author: "Healthy living recipe",
-        short: "A creamy, soothing smoothie perfect for unwinding after a long day.",
-        category: ['beverage', 'snack', 'sleep', 'stress'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/chamomile%20smoothie.jpg?raw=true",
-        ingredients: ['1 ripe banana, frozen', '1 cup brewed chamomile tea, cooled', '½ cup Greek yogurt or milk of choice', '1 tbsp honey or maple syrup', 'A handful of ice (optional)'],
-        instructions: ['Brew chamomile tea and let it cool completely.', 'Add the frozen banana, cooled tea, yogurt, and sweetener to a blender.', 'Blend until smooth and creamy.', 'Pour into a glass and enjoy immediately.'],
-        benefits: ['Calms the mind', 'Promotes relaxation', 'Soothes digestion']
-      },
-      {
-        id: "rosemary-roasted-veg",
-        name: "Rosemary Roasted Vegetables",
-        author: "Simple kitchen classic",
-        short: "A savory and aromatic side dish that's rich in antioxidants.",
-        category: ['savory'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/rosemary%20roased%20veggies.jpg?raw=true",
-        ingredients: ['2 cups mixed vegetables (carrots, potatoes, bell peppers)', '2 tbsp olive oil', '1 tbsp fresh rosemary, chopped', '2 cloves garlic, minced', 'Salt and black pepper to taste'],
-        instructions: ['Preheat oven to 400°F (200°C).', 'Chop vegetables into bite-sized pieces.', 'In a large bowl, toss vegetables with olive oil, rosemary, garlic, salt, and pepper.', 'Spread in a single layer on a baking sheet.', 'Roast for 25-30 minutes, or until tender and lightly browned, stirring halfway through.'],
-        benefits: ['Rich in antioxidants', 'Supports cognitive health', 'Delicious and nutrient-dense']
-      },
-      {
-        id: "oregano-lemon-dressing",
-        name: "Oregano Lemon Dressing",
-        author: "Mediterranean style",
-        short: "A zesty and fresh dressing perfect for salads and grilled meats.",
-        category: ['savory'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/oregano%20lemon%20dressing.jpg?raw=true",
-        ingredients: ['¼ cup olive oil', '2 tbsp fresh lemon juice', '1 tsp dried oregano', '1 clove garlic, minced', 'Salt and black pepper to taste'],
-        instructions: ['In a small bowl, whisk together the olive oil and lemon juice.', 'Stir in the dried oregano and minced garlic.', 'Season with salt and pepper.', 'Use immediately on your favorite salad or as a marinade.'],
-        benefits: ['Supports gut health', 'Antioxidant-rich', 'Enhances the flavor of any dish']
-      },
-      {
-        id: "lentil-soup",
-        name: "Immunity-Boosting Lentil Soup",
-        author: "Traditional remedy",
-        short: "A hearty and warming soup packed with immune-supporting ingredients.",
-        category: ['soup', 'immunity', 'savory'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/lentil%20soup.jpg?raw=true",
-        ingredients: ['1 cup red lentils, rinsed', '6 cups vegetable broth', '1 onion, chopped', '2 carrots, chopped', '2 cloves garlic, minced', '1 tsp grated fresh ginger', '½ tsp turmeric powder', 'Salt and black pepper to taste'],
-        instructions: ['In a large pot, combine lentils, broth, onion, carrots, garlic, ginger, and turmeric.', 'Bring to a boil, then reduce heat and simmer for 25-30 minutes, or until lentils are tender.', 'Season with salt and pepper. Serve hot.'],
-        benefits: ['Boosts immunity', 'Provides plant-based protein', 'High in fiber and nutrients']
-      },
-      {
-        id: "cinnamon-apples",
-        name: "Spiced Cinnamon Apples",
-        author: "Simple fall recipe",
-        short: "A sweet and comforting snack or dessert that aids digestion.",
-        category: ['dessert', 'snack'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/cinnamon%20apples.jpg?raw=true",
-        ingredients: ['2 apples, peeled and sliced', '1 tbsp butter or coconut oil', '1 tsp cinnamon', '1 tsp honey or maple syrup'],
-        instructions: ['Melt butter in a pan over medium heat.', 'Add sliced apples and cook for 5-7 minutes, until they begin to soften.', 'Stir in cinnamon and honey, and cook for another 2-3 minutes, until the apples are tender and coated.', 'Serve warm.'],
-        benefits: ['Aids digestion', 'Anti-inflammatory', 'Satisfies a sweet tooth naturally']
-      },
-      {
-        id: "golden-milk",
-        name: "Golden Milk (Haldi Doodh)",
-        author: "Traditional Ayurvedic",
-        short: "A warm, comforting anti-inflammatory drink.",
-        category: ['beverage', 'immunity', 'sleep'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/golden%20tea.jpg?raw=true",
-        ingredients: ['1 cup milk (dairy or plant-based)', '1 tsp turmeric powder', '½ tsp ginger powder', '¼ tsp cinnamon', 'Pinch of black pepper', '1 tsp honey or maple syrup (optional)'],
-        instructions: ['In a small saucepan, whisk together milk, turmeric, ginger, cinnamon, and black pepper.', 'Heat over medium-low heat until warm, stirring frequently (do not boil).', 'Remove from heat, strain if desired, and stir in honey or maple syrup.', 'Serve immediately.'],
-        benefits: ['Reduces inflammation', 'Boosts immunity', 'Promotes restful sleep', 'Aids digestion']
-      },
-      {
-        id: "immunity-stir-fry",
-        name: "Immunity-Boosting Veggie Stir-fry",
-        author: "Modern wellness kitchen",
-        short: "A vibrant, nutrient-packed meal to support your immune system.",
-        category: ['savory', 'immunity'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/veggie%20stir%20fry.jpg?raw=true",
-        ingredients: ['1 tbsp sesame oil', '2 cloves garlic, minced', '1 cup broccoli florets', '1 cup sliced bell peppers (mixed colors)', '1 cup chopped mushrooms', '½ cup chopped carrots', '2 tbsp soy sauce or tamari', '1 tbsp honey or maple syrup', '1 tsp grated fresh ginger'],
-        instructions: ['Heat sesame oil in a large skillet or wok over high heat.', 'Add garlic, broccoli, bell peppers, mushrooms, and carrots.', 'Stir-fry for 5-7 minutes until vegetables are crisp-tender.', 'In a small bowl, whisk together soy sauce, honey, and ginger.', 'Pour sauce over vegetables and stir-fry for another minute until coated.', 'Serve hot, optionally over rice or noodles.'],
-        benefits: ['Rich in vitamins and antioxidants', 'Supports immune function', 'A delicious way to eat more vegetables']
-      },
-      {
-        id: "cherry-smoothie",
-        name: "Anti-Inflammatory Cherry Smoothie",
-        author: "Modern wellness kitchen",
-        short: "A sweet treat with powerful anti-inflammatory benefits.",
-        category: ['beverage', 'snack', 'stress'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/cherry%20smoothie.jpg?raw=true",
-        ingredients: ['1 cup frozen dark cherries', '½ cup Greek yogurt', '½ cup almond milk', '1 tbsp chia seeds', '1 tsp honey'],
-        instructions: ['Combine all ingredients in a blender.', 'Blend until smooth and creamy.', 'Pour into a glass and serve immediately.'],
-        benefits: ['Rich in antioxidants', 'Reduces inflammation', 'Aids in muscle recovery']
-      },
-      {
-        id: "flaxseed-drink",
-        name: "Flaxseed Digestion Drink",
-        author: "Traditional health remedy",
-        short: "A simple, fiber-rich drink to support digestive regularity.",
-        category: ['beverage', 'digestion'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/flaxseed%20drink.jpg?raw=true",
-        ingredients: ['1 tbsp ground flaxseeds', '1 cup warm water', 'Optional: A squeeze of lemon'],
-        instructions: ['Stir the ground flaxseeds into the warm water.', 'Let it sit for 5 minutes to thicken slightly.', 'Add a squeeze of lemon if desired and drink.'],
-        benefits: ['Promotes bowel regularity', 'High in fiber and omega-3s', 'Aids in detoxification']
-      },
-      {
-        id: "lavender-tea",
-        name: "Relaxing Lavender Tea",
-        author: "Ayurvedic tradition",
-        short: "A fragrant and calming tea for winding down.",
-        category: ['beverage', 'sleep', 'stress'],
-        image: "https://github.com/NetraPatel48/HealthWhisper/blob/main/lavender%20tea.jpg?raw=true",
-        ingredients: ['1 tsp dried lavender buds', '1 cup boiling water', '1 tsp honey (optional)'],
-        instructions: ['Place lavender buds in a tea infuser or directly into a cup.', 'Pour boiling water over the buds and let steep for 5-10 minutes.', 'Strain out the buds, stir in honey if desired, and enjoy.'],
-        benefits: ['Promotes relaxation', 'Aids in restful sleep', 'Reduces anxiety']
-      }
-    ];
-
-    const pages = document.querySelectorAll('.page-section');
-    const navLinks = document.querySelectorAll('nav a');
+    // Get elements
+    const navLinks = document.querySelectorAll('nav a:not(.admin-link)');
+    const pageSections = document.querySelectorAll('.page-section');
     const messageBox = document.getElementById('message-box');
+    const contributeForm = document.getElementById('contribute-form');
+    const feedbackForm = document.getElementById('feedback-form');
 
-    // Home Section Logic
-    const remedyList = document.getElementById('remedy-list');
-    const remedySearch = document.getElementById('remedy-search');
+    // Navigation
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        const page = e.target.dataset.page;
+        showSection(page);
+        document.querySelectorAll('nav a:not(.admin-link)').forEach(l => l.classList.remove('active'));
+        e.target.classList.add('active');
+      });
+    });
 
-    function renderRemedies(list) {
-      remedyList.innerHTML = '';
-      if (list.length === 0) {
-        remedyList.innerHTML = '<p style="text-align: center; color: #b0b0b0;">No remedies found. Try a different search term.</p>';
-        return;
-      }
-      list.forEach(r => {
-        const item = document.createElement('div');
-        item.className = 'accordion-item';
-        item.innerHTML = `
+    function showSection(sectionId) {
+      pageSections.forEach(section => section.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+    }
+
+    function showMessage(message, type = 'success') {
+      messageBox.textContent = message;
+      messageBox.style.background = type === 'success' 
+        ? 'rgba(76, 175, 80, 0.9)' 
+        : 'rgba(255, 107, 107, 0.9)';
+      messageBox.style.display = 'block';
+      setTimeout(() => {
+        messageBox.style.display = 'none';
+      }, 3500);
+    }
+
+    // Remedy search and accordion
+    function renderRemedies() {
+      const remedyList = document.getElementById('remedy-list');
+      remedyList.innerHTML = remedies.map((remedy, index) => `
+        <div class="accordion-item" data-remedy="${index}">
           <div class="accordion-header">
-            <h3>${r.name}</h3>
+            <h3>${remedy.name}</h3>
             <span>▼</span>
           </div>
           <div class="accordion-content">
-            <p>${r.description}</p>
+            <p>${remedy.description}</p>
             <div class="dos">
               <h4>✅ Do's</h4>
-              <ul>${r.dos.map(d => `<li>${d}</li>`).join('')}</ul>
+              <ul>${remedy.dos.map(d => `<li>${d}</li>`).join('')}</ul>
             </div>
             <div class="donts">
               <h4>❌ Don'ts</h4>
-              <ul>${r.donts.map(d => `<li>${d}</li>`).join('')}</ul>
+              <ul>${remedy.donts.map(d => `<li>${d}</li>`).join('')}</ul>
             </div>
           </div>
-        `;
-        remedyList.appendChild(item);
-      });
-      document.querySelectorAll('.accordion-header').forEach(header => {
-        header.addEventListener('click', () => {
-          const item = header.parentElement;
+        </div>
+      `).join('');
+
+      document.querySelectorAll('.accordion-item').forEach(item => {
+        item.addEventListener('click', () => {
           item.classList.toggle('active');
         });
       });
     }
 
-    remedySearch.addEventListener('input', (e) => {
+    renderRemedies();
+
+    // Remedy search
+    document.getElementById('remedy-search').addEventListener('input', (e) => {
       const query = e.target.value.toLowerCase();
-      const filteredRemedies = remedies.filter(r =>
-        r.name.toLowerCase().includes(query) ||
-        r.description.toLowerCase().includes(query) ||
-        r.dos.some(d => d.toLowerCase().includes(query)) ||
-        r.donts.some(d => d.toLowerCase().includes(query))
-      );
-      renderRemedies(filteredRemedies);
+      const items = document.querySelectorAll('.accordion-item');
+      items.forEach(item => {
+        const title = item.querySelector('h3').textContent.toLowerCase();
+        const description = item.querySelector('.accordion-content p').textContent.toLowerCase();
+        item.style.display = title.includes(query) || description.includes(query) ? 'block' : 'none';
+      });
     });
 
-    // Herbs Section Logic
-    const herbListView = document.getElementById('herb-list-view');
-    const herbDetailView = document.getElementById('herb-detail-view');
-    const herbGrid = document.getElementById('herbGrid');
-    const herbSearch = document.getElementById('herb-search');
-    const herbFilterButtons = document.querySelectorAll('[data-filter-type="herbs"]');
-    const backToHerbs = document.getElementById('back-to-herbs');
-
-    let currentHerbCategory = 'all';
-
-    function renderHerbs(list) {
-      herbGrid.innerHTML = '';
-      if (list.length === 0) {
-        herbGrid.innerHTML = '<p style="text-align: center; color: #b0b0b0; grid-column: 1 / -1;">No herbs found. Try a different search.</p>';
-        return;
-      }
-      list.forEach(h => {
-        const div = document.createElement('div');
-        div.className = 'card';
-        
-        const img = new Image();
-        img.onload = function() {
-          const aspectRatio = this.naturalHeight / this.naturalWidth;
-          div.style.paddingTop = `calc(${aspectRatio * 100}% + 2rem)`;
-          div.style.backgroundImage = `url(${h.image})`;
-          div.classList.remove('loading');
-        };
-        img.src = h.image;
-        div.classList.add('loading');
-        div.innerHTML = `
+    // Herbs rendering
+    function renderHerbs(herbList = herbs) {
+      const herbGrid = document.getElementById('herbGrid');
+      herbGrid.innerHTML = herbList.map(herb => `
+        <div class="card" onclick="showHerbDetail('${herb.id}')">
+          <img src="${herb.image}" alt="${herb.name}">
           <div class="card-content">
-            <h3>${h.name} (${h.gujarati})</h3>
-            <p>${h.short}</p>
+            <h3>${herb.name}</h3>
+            <p>${herb.short}</p>
           </div>
-        `;
-        div.onclick = () => showHerbDetail(h.id);
-        herbGrid.appendChild(div);
-      });
-    }
-
-    function filterHerbs() {
-      const query = herbSearch.value.toLowerCase();
-      let filtered = herbs;
-      if (currentHerbCategory !== 'all') {
-        filtered = filtered.filter(h => h.category.includes(currentHerbCategory));
-      }
-      const finalFiltered = filtered.filter(h =>
-        h.name.toLowerCase().includes(query) ||
-        h.short.toLowerCase().includes(query) ||
-        h.gujarati.toLowerCase().includes(query)
-      );
-      renderHerbs(finalFiltered);
-    }
-
-    function filterHerbCategory(category) {
-      currentHerbCategory = category;
-      herbFilterButtons.forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.category === category) {
-          btn.classList.add('active');
-        }
-      });
-      filterHerbs();
-    }
-
-    function showHerbDetail(id) {
-      const herb = herbs.find(h => h.id === id);
-      if (!herb) return;
-      const detailContent = document.getElementById('herbDetail');
-      detailContent.innerHTML = `
-        <h2 style="color: #99f2c8;">${herb.name}</h2>
-        <p class="gujarati-name">${herb.gujarati}</p>
-        <p>${herb.short}</p>
-        
-        <h3>Benefits</h3>
-        <ul>
-          ${herb.benefits.map(b => `<li>${b}</li>`).join('')}
-        </ul>
-        
-        <h3>Uses</h3>
-        <ul>
-          ${herb.uses.map(u => `<li>${u}</li>`).join('')}
-        </ul>
-        
-        ${herb.precautions && herb.precautions.length > 0 ? `
-        <div class="precautions">
-          <h3>⚠️ Precautions</h3>
-          <ul>
-            ${herb.precautions.map(p => `<li>${p}</li>`).join('')}
-          </ul>
         </div>
-        ` : ''}
-      `;
-      herbListView.style.display = 'none';
-      herbDetailView.style.display = 'block';
+      `).join('');
     }
 
-    backToHerbs.addEventListener('click', (e) => {
-      e.preventDefault();
-      herbListView.style.display = 'block';
-      herbDetailView.style.display = 'none';
-    });
-    herbSearch.addEventListener('input', filterHerbs);
-    herbFilterButtons.forEach(btn => {
-      btn.addEventListener('click', () => filterHerbCategory(btn.dataset.category));
-    });
-
-    // Recipes Section Logic
-    const recipeListView = document.getElementById('recipe-list-view');
-    const recipeDetailView = document.getElementById('recipe-detail-view');
-    const recipeGrid = document.getElementById('recipeGrid');
-    const recipeSearch = document.getElementById('recipe-search');
-    const recipeFilterButtons = document.querySelectorAll('[data-filter-type="recipes"]');
-    const backToRecipes = document.getElementById('back-to-recipes');
-
-    let currentRecipeCategory = 'all';
-
-    function renderRecipes(list) {
-      recipeGrid.innerHTML = '';
-      if (list.length === 0) {
-        recipeGrid.innerHTML = '<p style="text-align: center; color: #b0b0b0; grid-column: 1 / -1;">No recipes found. Try a different search.</p>';
-        return;
-      }
-      list.forEach(r => {
-        const div = document.createElement('div');
-        div.className = 'card';
-        
-        const img = new Image();
-        img.onload = function() {
-          const aspectRatio = this.naturalHeight / this.naturalWidth;
-          div.style.paddingTop = `calc(${aspectRatio * 100}% + 2rem)`;
-          div.style.backgroundImage = `url(${r.image})`;
-          div.classList.remove('loading');
-        };
-        img.src = r.image;
-        div.classList.add('loading');
-        div.innerHTML = `
-          <div class="card-content">
-            <h3>${r.name}</h3>
-            <p>${r.short}</p>
-          </div>
+    function showHerbDetail(herbId) {
+      const herb = herbs.find(h => h.id === herbId);
+      if (herb) {
+        document.getElementById('herb-list-view').style.display = 'none';
+        document.getElementById('herb-detail-view').classList.add('active');
+        const detail = document.getElementById('herbDetail');
+        detail.innerHTML = `
+          <h2>${herb.name}</h2>
+          <p class="gujarati-name">${herb.gujarati}</p>
+          <h3>🌟 Benefits</h3>
+          <ul class="benefit-list">${herb.benefits.map(b => `<li>${b}</li>`).join('')}</ul>
+          <h3>🍵 Uses</h3>
+          <ul class="use-list">${herb.uses.map(u => `<li>${u}</li>`).join('')}</ul>
+          <h3>⚠️ Precautions</h3>
+          <ul class="precaution-list">${herb.precautions.map(p => `<li>${p}</li>`).join('')}</ul>
         `;
-        div.onclick = () => showRecipeDetail(r.id);
-        recipeGrid.appendChild(div);
-      });
-    }
-
-    function filterRecipes() {
-      const query = recipeSearch.value.toLowerCase();
-      let filtered = recipes;
-      if (currentRecipeCategory !== 'all') {
-        filtered = filtered.filter(r => r.category.includes(currentRecipeCategory));
       }
-      const finalFiltered = filtered.filter(r =>
-        r.name.toLowerCase().includes(query) ||
-        r.short.toLowerCase().includes(query) ||
-        r.ingredients.some(i => i.toLowerCase().includes(query))
-      );
-      renderRecipes(finalFiltered);
     }
 
-    function filterRecipeCategory(category) {
-      currentRecipeCategory = category;
-      recipeFilterButtons.forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.category === category) {
-          btn.classList.add('active');
+    function goBackToHerbs() {
+      document.getElementById('herb-list-view').style.display = 'block';
+      document.getElementById('herb-detail-view').classList.remove('active');
+    }
+
+    function goBackToRecipes() {
+      document.getElementById('recipe-list-view').style.display = 'block';
+      document.getElementById('recipe-detail-view').classList.remove('active');
+    }
+
+    // Render herbs on page load
+    renderHerbs();
+
+    // Herb filter
+    document.querySelectorAll('.filters button[data-filter-type="herbs"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.filters button[data-filter-type="herbs"]').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        const category = e.target.dataset.category;
+        if (category === 'all') {
+          renderHerbs(herbs);
+        } else {
+          renderHerbs(herbs.filter(h => h.category.includes(category)));
         }
       });
-      filterRecipes();
-    }
-
-    function showRecipeDetail(id) {
-      const recipe = recipes.find(r => r.id === id);
-      if (!recipe) return;
-      const detailContent = document.getElementById('recipeDetail');
-      detailContent.innerHTML = `
-        <h2 style="color: #99f2c8;">${recipe.name}</h2>
-        <p class="author">By: ${recipe.author}</p>
-        <p>${recipe.short}</p>
-        
-        <h3>Ingredients</h3>
-        <ul class="ingredient-list">
-          ${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}
-        </ul>
-        
-        <h3>Instructions</h3>
-        <ul class="instruction-list">
-          ${recipe.instructions.map(ins => `<li>${ins}</li>`).join('')}
-        </ul>
-
-        <h3>Benefits</h3>
-        <ul class="benefit-list">
-          ${recipe.benefits.map(b => `<li>${b}</li>`).join('')}
-        </ul>
-      `;
-      recipeListView.style.display = 'none';
-      recipeDetailView.style.display = 'block';
-    }
-
-    backToRecipes.addEventListener('click', (e) => {
-      e.preventDefault();
-      recipeListView.style.display = 'block';
-      recipeDetailView.style.display = 'none';
-    });
-    recipeSearch.addEventListener('input', filterRecipes);
-    recipeFilterButtons.forEach(btn => {
-      btn.addEventListener('click', () => filterRecipeCategory(btn.dataset.category));
     });
 
-    // Forms Logic
-    const contributeForm = document.getElementById('contribute-form');
-    const feedbackForm = document.getElementById('feedback-form');
-
-    function showMessage(message, duration = 3000) {
-      messageBox.textContent = message;
-      messageBox.style.display = 'block';
-      setTimeout(() => {
-        messageBox.style.display = 'none';
-      }, duration);
-    }
-
+    // ===== CONTRIBUTE FORM - SAVES TO LOCALSTORAGE =====
     contributeForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      showMessage('Thank you for your contribution! Your remedy has been submitted for review.');
+      const contribution = {
+        id: Date.now(),
+        name: document.getElementById('remedy-name').value,
+        description: document.getElementById('remedy-description').value,
+        dos: document.getElementById('remedy-dos').value.split(',').map(d => d.trim()),
+        donts: document.getElementById('remedy-donts').value.split(',').map(d => d.trim()),
+        status: 'pending',
+        date: new Date().toISOString()
+      };
+
+      let contributions = JSON.parse(localStorage.getItem('healthwhisper_contributions') || '[]');
+      contributions.push(contribution);
+      localStorage.setItem('healthwhisper_contributions', JSON.stringify(contributions));
+
+      showMessage('✅ Thank you! Your remedy has been submitted for review. Check the Admin Panel to track it.');
       contributeForm.reset();
     });
 
+    // ===== FEEDBACK FORM - SAVES TO LOCALSTORAGE =====
     feedbackForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      showMessage('Thank you for your feedback!');
+      const feedback = {
+        id: Date.now(),
+        name: document.getElementById('feedback-name').value,
+        email: document.getElementById('feedback-email').value,
+        message: document.getElementById('feedback-message').value,
+        date: new Date().toISOString()
+      };
+
+      let feedbacks = JSON.parse(localStorage.getItem('healthwhisper_feedbacks') || '[]');
+      feedbacks.push(feedback);
+      localStorage.setItem('healthwhisper_feedbacks', JSON.stringify(feedbacks));
+
+      showMessage('✅ Thank you for your feedback! We appreciate your thoughts and will review them soon.');
       feedbackForm.reset();
     });
 
-    // SPA Navigation Logic
-    function showPage(pageId) {
-      pages.forEach(page => {
-        page.classList.remove('active');
-      });
-      document.getElementById(pageId).classList.add('active');
-
-      navLinks.forEach(link => {
-        if (link.dataset.page === pageId) {
-          link.classList.add('active');
-        } else {
-          link.classList.remove('active');
-        }
-      });
-    }
-
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        showPage(link.dataset.page);
-        if (link.dataset.page === 'home-section') {
-          renderRemedies(remedies);
-        } else if (link.dataset.page === 'herbs-section') {
-          herbListView.style.display = 'block';
-          herbDetailView.style.display = 'none';
-          filterHerbs();
-        } else if (link.dataset.page === 'recipes-section') {
-          recipeListView.style.display = 'block';
-          recipeDetailView.style.display = 'none';
-          filterRecipes();
-        }
-      });
-    });
-
-    // Initial page load
-    renderRemedies(remedies);
-    filterHerbs();
-    filterRecipes(); // Call this to set up the recipe grid on first load
+    // Set home as active on load
+    navLinks[0].classList.add('active');
   </script>
 </body>
 </html>
-
-
-
-
-
