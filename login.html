@@ -129,14 +129,10 @@ h1{
     right:15px;
     top:50%;
     transform:translateY(-50%);
-    background:none;
-    border:none;
     color:#99f2c8;
-    font-size:18px;
+    font-size:20px;
     cursor:pointer;
-    width:auto;
-    padding:0;
-    margin:0;
+    user-select:none;
 }
 
 
@@ -227,9 +223,7 @@ Login to explore herbal remedies, healthy recipes and AI-powered healthcare info
 <div class="password-box">
     <input type="password" id="password" placeholder="Enter your password" required>
 
-    <button class="eye-btn" type="button" onclick="togglePassword()">
-        👁
-    </button>
+    <span class="eye-btn" onclick="togglePassword()">👁</span>
 </div>
 
 </div>
