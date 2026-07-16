@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Health Whisper Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #1f4037, #212121);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #e0e0e0;
+    }
+
+    .login-container {
+      background: #2a2a2a;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      padding: 3rem 2rem;
+      width: 100%;
+      max-width: 400px;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-header h1 {
+      font-size: 2rem;
+      color: #99f2c8;
+      margin-bottom: 0.5rem;
+    }
+
+    .login-header p {
+      color: #b0b0b0;
+      font-size: 0.95rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #a8e063;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      background: #333;
+      border: 1px solid #444;
+      border-radius: 8px;
+      color: #e0e0e0;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #99f2c8;
+      box-shadow: 0 0 8px rgba(153, 242, 200, 0.3);
+    }
+
+    .form-group input::placeholder {
+      color: #777;
+    }
+
+    .remember-forgot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .remember-forgot label {
+      display: flex;
+      align-items: center;
+      color: #b0b0b0;
+      cursor: pointer;
+    }
+
+    .remember-forgot input[type="checkbox"] {
+      margin-right: 0.5rem;
+      cursor: pointer;
+    }
+
+    .remember-forgot a {
+      color: #99f2c8;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .remember-forgot a:hover {
+      color: #a8e063;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(45deg, #56ab2f, #a8e063);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .login-btn:hover {
+      background: linear-gradient(45deg, #a8e063, #56ab2f);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(168, 224, 99, 0.3);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .error-message {
+      background: #ff6b6b;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      display: none;
+      text-align: center;
+      animation: shake 0.3s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .signup-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #b0b0b0;
+      font-size: 0.9rem;
+    }
+
+    .signup-link a {
+      color: #99f2c8;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    .signup-link a:hover {
+      color: #a8e063;
+    }
+
+    .demo-credentials {
+      background: #1f4037;
+      border-left: 3px solid #99f2c8;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #b0b0b0;
+    }
+
+    .demo-credentials strong {
+      color: #a8e063;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .demo-credentials p {
+      margin: 0.3rem 0;
+    }
+
+    .back-to-home {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .back-to-home a {
+      color: #99f2c8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.3s;
+    }
+
+    .back-to-home a:hover {
+      color: #a8e063;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-header">
+      <h1>🌿 Health Whisper</h1>
+      <p>Admin Portal Login</p>
+    </div>
+
+    <div class="error-message" id="errorMessage"></div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input 
+          type="text" 
+          id="username" 
+          placeholder="Enter your username"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          placeholder="Enter your password"
+          required
+        >
+      </div>
+
+      <div class="remember-forgot">
+        <label>
+          <input type="checkbox" id="rememberMe">
+          Remember me
+        </label>
+        <a href="#forgot">Forgot Password?</a>
+      </div>
+
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+
+    <div class="demo-credentials">
+      <strong>Demo Credentials:</strong>
+      <p><strong>Username:</strong> admin</p>
+      <p><strong>Password:</strong> admin123</p>
+      <p><em>Note: Change these credentials in production!</em></p>
+    </div>
+
+    <div class="back-to-home">
+      <a href="index.html">← Back to Health Whisper</a>
+    </div>
+  </div>
+
+  <script>
+    // Simple authentication system
+    const users = {
+      admin: 'admin123' // In production, use proper authentication with backend
+    };
+
+    const loginForm = document.getElementById('loginForm');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const rememberMeCheckbox = document.getElementById('rememberMe');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // Check if user is already logged in
+    window.addEventListener('load', () => {
+      const savedUser = localStorage.getItem('healthwhisper_user');
+      if (savedUser) {
+        window.location.href = 'admin.html';
+      }
+    });
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+
+      // Clear previous error
+      errorMessage.classList.remove('show');
+      errorMessage.textContent = '';
+
+      // Validate credentials
+      if (!username || !password) {
+        showError('Please enter both username and password');
+        return;
+      }
+
+      if (users[username] && users[username] === password) {
+        // Successful login
+        localStorage.setItem('healthwhisper_user', username);
+        localStorage.setItem('healthwhisper_loginTime', new Date().toISOString());
+
+        if (rememberMeCheckbox.checked) {
+          localStorage.setItem('healthwhisper_rememberMe', 'true');
+        }
+
+        // Redirect to admin panel
+        window.location.href = 'admin.html';
+      } else {
+        showError('Invalid username or password. Try username: admin, password: admin123');
+        passwordInput.value = '';
+      }
+    });
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.classList.add('show');
+      setTimeout(() => {
+        errorMessage.classList.remove('show');
+      }, 4000);
+    }
+  </script>
+</body>
+</html>
