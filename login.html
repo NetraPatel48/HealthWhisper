@@ -172,8 +172,13 @@ button:hover{
 @media(max-width:450px){
 
 .login-box{
-width:90%;
-padding:30px;
+    position: relative;
+    z-index: 9999 !important;
+}
+
+body::before,
+body::after{
+    pointer-events: none;
 }
 
 }
