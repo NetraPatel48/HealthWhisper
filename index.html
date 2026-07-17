@@ -1,18 +1,171 @@
-      <!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Health Whisper</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome | Health Whisper</title>
 
-    <script>
-        window.location.replace("login.html");
-    </script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0f3d2e,#1b4332,#2d6a4f);
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+overflow:hidden;
+}
+
+.container{
+width:90%;
+max-width:700px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(12px);
+padding:40px;
+border-radius:20px;
+text-align:center;
+box-shadow:0 0 25px rgba(0,0,0,0.4);
+animation:fadeIn 1s ease;
+}
+
+.logo{
+font-size:70px;
+margin-bottom:15px;
+}
+
+h1{
+font-size:42px;
+margin-bottom:10px;
+}
+
+.tagline{
+color:#b7f7c7;
+font-size:18px;
+margin-bottom:25px;
+}
+
+p{
+line-height:1.8;
+font-size:16px;
+margin-bottom:25px;
+}
+
+.info{
+text-align:left;
+margin:30px 0;
+background:rgba(255,255,255,.08);
+padding:20px;
+border-radius:12px;
+}
+
+.info h2{
+margin-bottom:12px;
+color:#9be564;
+}
+
+.info p{
+margin:8px 0;
+}
+
+button{
+margin-top:20px;
+padding:15px 40px;
+border:none;
+border-radius:30px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+background:linear-gradient(45deg,#56ab2f,#a8e063);
+color:white;
+transition:.3s;
+}
+
+button:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 20px rgba(0,0,0,.3);
+}
+
+footer{
+margin-top:30px;
+font-size:14px;
+opacity:.8;
+}
+
+@keyframes fadeIn{
+
+from{
+opacity:0;
+transform:translateY(30px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+</style>
 
 </head>
 
 <body>
 
-<p>Redirecting to Login...</p>
+<div class="container">
+
+<div class="logo">🌿</div>
+
+<h1>Health Whisper</h1>
+
+<div class="tagline">
+Nature's Healing, Powered by Knowledge
+</div>
+
+<p>
+
+Welcome to <b>Health Whisper</b>, your trusted guide to herbal remedies,
+healthy recipes and natural wellness.
+
+This project combines traditional herbal knowledge with modern technology
+to help users discover safe and effective home remedies.
+
+</p>
+
+
+
+<button onclick="enterWebsite()">
+
+Enter Health Whisper →
+
+</button>
+
+<footer>
+
+© 2026 Health Whisper | Educational Project
+
+</footer>
+
+</div>
+
+<script>
+
+function enterWebsite(){
+
+window.location.href="HealthWhisper.html";
+
+}
+
+</script>
 
 </body>
 </html>
