@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Welcome | Health Whisper</title>
+
+<title>Health Whisper</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -14,103 +15,155 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Poppins',sans-serif;
+scroll-behavior:smooth;
 }
 
 body{
-background:linear-gradient(135deg,#0f3d2e,#1b4332,#2d6a4f);
-color:white;
+background:linear-gradient(135deg,#0b2f24,#1b4332,#2d6a4f);
 display:flex;
 justify-content:center;
 align-items:center;
 min-height:100vh;
-overflow:hidden;
+padding:20px;
+color:white;
 }
 
 .container{
-width:90%;
-max-width:700px;
-background:rgba(255,255,255,0.08);
+width:100%;
+max-width:550px;
+background:rgba(255,255,255,.08);
 backdrop-filter:blur(12px);
-padding:40px;
-border-radius:20px;
+border-radius:25px;
+padding:40px 30px;
 text-align:center;
-box-shadow:0 0 25px rgba(0,0,0,0.4);
+box-shadow:0 15px 35px rgba(0,0,0,.35);
 animation:fadeIn 1s ease;
 }
 
 .logo{
-font-size:70px;
-margin-bottom:15px;
+font-size:85px;
+margin-bottom:10px;
+animation:float 3s ease-in-out infinite;
 }
 
 h1{
-font-size:42px;
+font-size:48px;
+font-weight:700;
 margin-bottom:10px;
 }
 
 .tagline{
-color:#b7f7c7;
-font-size:18px;
+font-size:20px;
+color:#baf5ca;
 margin-bottom:25px;
 }
 
 p{
+font-size:17px;
 line-height:1.8;
-font-size:16px;
-margin-bottom:25px;
+color:#f2f2f2;
+margin-bottom:30px;
 }
 
-.info{
-text-align:left;
-margin:30px 0;
+.card{
 background:rgba(255,255,255,.08);
 padding:20px;
-border-radius:12px;
+border-radius:18px;
+margin-bottom:20px;
+text-align:left;
 }
 
-.info h2{
+.card h2{
+color:#9ff4bf;
 margin-bottom:12px;
-color:#9be564;
+font-size:24px;
 }
 
-.info p{
-margin:8px 0;
+.card p{
+margin:6px 0;
+font-size:16px;
 }
 
 button{
-margin-top:20px;
-padding:15px 40px;
+width:100%;
+padding:18px;
 border:none;
-border-radius:30px;
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
-background:linear-gradient(45deg,#56ab2f,#a8e063);
+border-radius:50px;
+background:linear-gradient(135deg,#43cea2,#66bb6a);
+font-size:20px;
+font-weight:700;
 color:white;
+cursor:pointer;
 transition:.3s;
+animation:pulse 2s infinite;
 }
 
 button:hover{
-transform:translateY(-3px);
-box-shadow:0 10px 20px rgba(0,0,0,.3);
+transform:translateY(-4px);
+box-shadow:0 10px 25px rgba(0,0,0,.3);
 }
 
 footer{
-margin-top:30px;
+margin-top:25px;
 font-size:14px;
-opacity:.8;
+color:#d6d6d6;
 }
 
 @keyframes fadeIn{
-
 from{
 opacity:0;
 transform:translateY(30px);
 }
-
 to{
 opacity:1;
 transform:translateY(0);
+}
+}
+
+@keyframes float{
+0%{
+transform:translateY(0);
+}
+50%{
+transform:translateY(-10px);
+}
+100%{
+transform:translateY(0);
+}
+}
+
+@keyframes pulse{
+0%{
+box-shadow:0 0 0 0 rgba(102,187,106,.6);
+}
+70%{
+box-shadow:0 0 0 18px rgba(102,187,106,0);
+}
+100%{
+box-shadow:0 0 0 0 rgba(102,187,106,0);
+}
+}
+
+@media(max-width:600px){
+
+.container{
+padding:30px 20px;
+}
+
+.logo{
+font-size:70px;
+}
+
+h1{
+font-size:42px;
+}
+
+.tagline{
+font-size:18px;
+}
+
+p{
+font-size:16px;
 }
 
 }
@@ -133,24 +186,44 @@ Nature's Healing, Powered by Knowledge
 
 <p>
 
-Welcome to <b>Health Whisper</b>, your trusted guide to herbal remedies,
-healthy recipes and natural wellness.
-
-This project combines traditional herbal knowledge with modern technology
-to help users discover safe and effective home remedies.
+Welcome to <strong>Health Whisper</strong>, an educational platform designed to help users discover herbal remedies, healthy recipes and AI-powered healthcare information. Our aim is to make natural wellness simple, accessible and informative for everyone.
 
 </p>
 
+<div class="card">
+
+<h2>🌱 About the Project</h2>
+
+<p>• Herbal Remedies for common health problems</p>
+<p>• Healthy & Nutritious Recipes</p>
+<p>• AI-powered Healthcare Information</p>
+<p>• Easy-to-use and Mobile Friendly</p>
+
+</div>
+
+<div class="card">
+
+<h2>👩‍💻 Developer</h2>
+
+<p><strong>Name:</strong> Netra Patel</p>
+
+<p><strong>Department:</strong> Computer Engineering</p>
+
+<p><strong>Institute:</strong> SVIT, Vasad</p>
+
+<p><strong>Project:</strong> Health Whisper</p>
+
+</div>
 
 <button onclick="enterWebsite()">
 
-Enter Health Whisper →
+🌿 Enter Health Whisper
 
 </button>
 
 <footer>
 
-© 2026 Health Whisper | Educational Project
+Made with ❤️ for Academic Project Presentation
 
 </footer>
 
@@ -159,9 +232,7 @@ Enter Health Whisper →
 <script>
 
 function enterWebsite(){
-
 window.location.href="HealthWhisper.html";
-
 }
 
 </script>
